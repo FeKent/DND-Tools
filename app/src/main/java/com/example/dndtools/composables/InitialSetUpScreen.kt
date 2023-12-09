@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InitialSetUp() {
+fun InitialSetUpScreen() {
     Column {
         CenterAlignedTopAppBar(title = { Text(text = "Welcome GM!")}, modifier = Modifier.shadow(4.dp))
         Column(modifier = Modifier.fillMaxSize()) {
@@ -30,5 +30,5 @@ fun InitialSetUp() {
 @Preview (showSystemUi = true)
 @Composable
 fun InitialPreview() {
-    InitialSetUp()
+    InitialSetUpScreen()
 }
