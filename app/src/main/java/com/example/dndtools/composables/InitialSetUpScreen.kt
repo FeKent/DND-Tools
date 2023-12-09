@@ -15,11 +15,11 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InitialSetUpScreen() {
+fun InitialSetUpScreen(addScreen: () -> Unit,) {
     Column {
         CenterAlignedTopAppBar(title = { Text(text = "Welcome GM!")}, modifier = Modifier.shadow(4.dp))
         Column(modifier = Modifier.fillMaxSize()) {
-            TextButton(onClick = { /*TODO*/ }, modifier = Modifier.weight(1f).align(Alignment.CenterHorizontally)) {
+            TextButton(onClick = { addScreen() }, modifier = Modifier.weight(1f).align(Alignment.CenterHorizontally)) {
                 Text(text = "New Campaign")
             }
 
@@ -30,5 +30,5 @@ fun InitialSetUpScreen() {
 @Preview (showSystemUi = true)
 @Composable
 fun InitialPreview() {
-    InitialSetUpScreen()
+    InitialSetUpScreen{}
 }

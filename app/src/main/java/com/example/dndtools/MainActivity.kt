@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-
+                    DndToolsApp()
                 }
             }
         }
@@ -50,7 +50,7 @@ fun DndToolsApp() {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = Screen.Intro.route){
-        composable(Screen.Intro.route){ InitialSetUpScreen()}
+        composable(Screen.Intro.route){ InitialSetUpScreen(addScreen = {navController.navigate("add")})}
         composable(Screen.Add.route){
             val addScreenScope = rememberCoroutineScope()
             AddCampaignScreen(onCampaignEntered = { newCampaign ->
