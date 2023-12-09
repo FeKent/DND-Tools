@@ -34,3 +34,15 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+sealed class  Screen(val route: String){
+    object Intro : Screen("intro")
+    object Add : Screen("add")
+}
+
+@Composable
+fun DndToolsApp() {
+    val appContext = LocalContext.current
+    val database = remember { Room.databaseBuilder(appContext, DndToolsDatabase::class.java, "Campaign Database").build()}
+
+    NavHost()
+}
