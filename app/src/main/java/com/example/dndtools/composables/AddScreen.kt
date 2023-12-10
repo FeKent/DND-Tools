@@ -56,7 +56,7 @@ fun AddScreen(
 
     Column(modifier = Modifier.fillMaxSize()) {
         CenterAlignedTopAppBar(
-            title = { Text(text = "Add Campaign") },
+            title = { if(results) {Text(text = "Add Campaign")} else {Text(text = "Add One-Shot")} },
             modifier = Modifier.shadow(4.dp)
         )
         Spacer(modifier = Modifier.size(32.dp))
@@ -161,7 +161,7 @@ fun AddNumField(
     modifier: Modifier = Modifier
 ) {
     TextField(
-        value = value, onValueChange = { onValueChange(value) }, singleLine = true,
+        value = value, onValueChange = { onValueChange(it) }, singleLine = true,
         label = { Text(text = label) },
         keyboardOptions = KeyboardOptions(
             imeAction = ImeAction.Next, keyboardType = KeyboardType.Number

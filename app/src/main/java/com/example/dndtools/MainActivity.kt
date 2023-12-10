@@ -46,11 +46,18 @@ sealed class Screen(val route: String) {
 @Composable
 fun DndToolsApp() {
     val appContext = LocalContext.current
-    val database = remember {
+    val campaignDatabase = remember {
         Room.databaseBuilder(
             appContext,
             DndToolsDatabase::class.java,
             "Campaign Database"
+        ).build()
+    }
+    val oneShotDatabase = remember {
+        Room.databaseBuilder(
+            appContext,
+            DndToolsDatabase::class.java,
+            "OneShot Database"
         ).build()
     }
     val navController = rememberNavController()
@@ -62,12 +69,12 @@ fun DndToolsApp() {
             AddScreen(
                 onCampaignEntered = { newCampaign ->
                     addScreenScope.launch {
-                        database.campaignDao().insertCampaign(newCampaign)
+                        campaignDatabase.campaignDao().insertCampaign(newCampaign)
                     }
                 },
                 onOneShotEntered = { newOneShot ->
                     addScreenScope.launch {
-                        database.oneShotDao().insertOneShot(newOneShot)
+                        oneShotDatabase.oneShotDao().insertOneShot(newOneShot)
                     }
                 })
         }
