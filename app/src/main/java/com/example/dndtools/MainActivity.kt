@@ -15,7 +15,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
-import com.example.dndtools.composables.AddCampaignScreen
+import com.example.dndtools.composables.AddScreen
 import com.example.dndtools.composables.InitialSetUpScreen
 import com.example.dndtools.data.DndToolsDatabase
 import com.example.dndtools.ui.theme.DNDToolsTheme
@@ -38,25 +38,38 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-sealed class  Screen(val route: String){
+sealed class Screen(val route: String) {
     object Intro : Screen("intro")
-    object Add : Screen("add")
+    object Add : Screen("add/{results}")
 }
 
 @Composable
 fun DndToolsApp() {
     val appContext = LocalContext.current
-    val database = remember { Room.databaseBuilder(appContext, DndToolsDatabase::class.java, "Campaign Database").build()}
+    val database = remember {
+        Room.databaseBuilder(
+            appContext,
+            DndToolsDatabase::class.java,
+            "Campaign Database"
+        ).build()
+    }
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = Screen.Intro.route){
-        composable(Screen.Intro.route){ InitialSetUpScreen(addScreen = {navController.navigate("add")})}
-        composable(Screen.Add.route){
+    NavHost(navController = navController, startDestination = Screen.Intro.route) {
+        composable(Screen.Intro.route) { InitialSetUpScreen { results -> navController.navigate("add/$results") } }
+        composable(Screen.Add.route) {
             val addScreenScope = rememberCoroutineScope()
-            AddCampaignScreen(onCampaignEntered = { newCampaign ->
-            addScreenScope.launch {
-                database.campaignDao().insertCampaign(newCampaign)
-            }
-        })}
+            AddScreen(
+                onCampaignEntered = { newCampaign ->
+                    addScreenScope.launch {
+                        database.campaignDao().insertCampaign(newCampaign)
+                    }
+                },
+                onOneShotEntered = { newOneShot ->
+                    addScreenScope.launch {
+                        database.oneShotDao().insertOneShot(newOneShot)
+                    }
+                })
+        }
     }
 }

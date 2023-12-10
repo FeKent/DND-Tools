@@ -7,6 +7,6 @@ import androidx.room.PrimaryKey
 data class OneShot(
     @PrimaryKey (autoGenerate = true) val id: Int = 0,
     val shotTitle: String,
-    val players: Int,
-    val setting: String,
+    val shotPlayers: Int,
+    val shotSetting: String,
 )
