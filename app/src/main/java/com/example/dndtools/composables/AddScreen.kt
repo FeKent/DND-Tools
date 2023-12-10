@@ -40,7 +40,7 @@ fun AddScreen(
     onCampaignEntered: ((Campaign) -> Unit)? = null,
     onOneShotEntered: ((OneShot) -> Unit)? = null
 ) {
-    var results = addViewModel.results
+    val results = addViewModel.results
 
     var title by remember { mutableStateOf("") }
     var players by remember { mutableStateOf("") }

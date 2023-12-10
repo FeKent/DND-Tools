@@ -23,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -34,7 +35,12 @@ import com.example.dndtools.viewmodels.IntroViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun IntroScreen(campaigns: List<Campaign>, oneShots: List<OneShot> ,introViewModel: IntroViewModel = viewModel(), addScreen: (Any?) -> Unit) {
+fun IntroScreen(
+    campaigns: List<Campaign>,
+    oneShots: List<OneShot>,
+    introViewModel: IntroViewModel = viewModel(),
+    addScreen: (Any?) -> Unit
+) {
     var expanded by remember { mutableStateOf(false) }
     var selectedAdventureType by remember { mutableStateOf<String?>(null) }
 
@@ -76,20 +82,30 @@ fun IntroScreen(campaigns: List<Campaign>, oneShots: List<OneShot> ,introViewMod
                     DropdownMenuItem(
                         text = { Text(text = "Campaign") },
                         onClick = {
-                            selectedAdventureType = "Displaying Campaigns" ;expanded = false
+                            selectedAdventureType = "Displaying Campaigns";expanded = false
                         })
                     DropdownMenuItem(
                         text = { Text(text = "One-Shot") },
                         onClick = {
-                            selectedAdventureType = "Displaying One-Shots" ; expanded = false
+                            selectedAdventureType = "Displaying One-Shots"; expanded = false
                         })
                 }
             }
         }
         Spacer(modifier = Modifier.size(24.dp))
-        when (selectedAdventureType) {
-            "Campaigns" -> campaigns.forEach { item -> CampaignRow(campaign = item) }
-            "One-Shots" -> oneShots.forEach { item -> OneShotRow(oneShot = item) }
+
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            if (selectedAdventureType?.contains("One-Shots") == true) {
+                oneShots.forEach { item -> OneShotRow(oneShot = item) }
+            } else if (selectedAdventureType?.contains("Campaign") == true) {
+                campaigns.forEach { item -> CampaignRow(campaign = item) }
+            } else {
+                oneShots.forEach { item -> OneShotRow(oneShot = item) }
+                campaigns.forEach { item -> CampaignRow(campaign = item) }
+            }
         }
     }
 }
@@ -99,7 +115,7 @@ fun CampaignRow(campaign: Campaign) {
     Box(modifier = Modifier
         .padding(horizontal = 24.dp)
         .fillMaxWidth()
-        .clickable { /*TODO*/ }){
+        .clickable { /*TODO*/ }) {
         Row {
             Spacer(modifier = Modifier.size(4.dp))
             Text(text = campaign.title)
@@ -114,7 +130,7 @@ fun OneShotRow(oneShot: OneShot) {
     Box(modifier = Modifier
         .padding(horizontal = 24.dp)
         .fillMaxWidth()
-        .clickable { /*TODO*/ }){
+        .clickable { /*TODO*/ }) {
         Row {
             Spacer(modifier = Modifier.size(4.dp))
             Text(text = oneShot.shotTitle)

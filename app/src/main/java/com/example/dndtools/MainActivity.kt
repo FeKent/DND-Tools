@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -58,11 +59,12 @@ fun DndToolsApp() {
     }
     val navController = rememberNavController()
 
+
     NavHost(navController = navController, startDestination = Screen.Intro.route) {
         composable(Screen.Intro.route) {
             val campaigns by database.campaignDao().allCampaigns().collectAsState(initial = emptyList())
             val oneshots by database.oneShotDao().allOneShots().collectAsState(initial = emptyList())
-            IntroScreen(campaigns = campaigns, oneShots = oneshots, introViewModel = IntroViewModel()) { results ->
+            IntroScreen(campaigns = campaigns, oneShots = oneshots) { results ->
                 navController.navigate(
                     "add/$results"
                 )
