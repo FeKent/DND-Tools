@@ -22,7 +22,7 @@ import com.example.dndtools.viewmodels.IntroViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InitialSetUpScreen(introViewModel: IntroViewModel = viewModel(), addScreen: (Any?) -> Unit) {
+fun IntroScreen(introViewModel: IntroViewModel = viewModel(), addScreen: (Any?) -> Unit) {
     Column {
         CenterAlignedTopAppBar(title = { Text(text = "Welcome GM!")}, modifier = Modifier.shadow(4.dp))
         Spacer(modifier = Modifier.size(16.dp))
@@ -43,5 +43,5 @@ fun InitialSetUpScreen(introViewModel: IntroViewModel = viewModel(), addScreen: 
 @Preview (showSystemUi = true)
 @Composable
 fun InitialPreview() {
-    InitialSetUpScreen{}
+    IntroScreen{}
 }

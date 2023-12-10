@@ -16,7 +16,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.example.dndtools.composables.AddScreen
-import com.example.dndtools.composables.InitialSetUpScreen
+import com.example.dndtools.composables.IntroScreen
 import com.example.dndtools.data.DndToolsDatabase
 import com.example.dndtools.ui.theme.DNDToolsTheme
 import kotlinx.coroutines.launch
@@ -63,7 +63,7 @@ fun DndToolsApp() {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = Screen.Intro.route) {
-        composable(Screen.Intro.route) { InitialSetUpScreen { results -> navController.navigate("add/$results") } }
+        composable(Screen.Intro.route) { IntroScreen { results -> navController.navigate("add/$results") } }
         composable(Screen.Add.route) {
             val addScreenScope = rememberCoroutineScope()
             AddScreen(
