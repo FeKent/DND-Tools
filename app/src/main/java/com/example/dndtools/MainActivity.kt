@@ -49,26 +49,19 @@ sealed class Screen(val route: String) {
 @Composable
 fun DndToolsApp() {
     val appContext = LocalContext.current
-    val campaignDatabase = remember {
+    val database = remember {
         Room.databaseBuilder(
             appContext,
             DndToolsDatabase::class.java,
-            "Campaign Database"
-        ).build()
-    }
-    val oneShotDatabase = remember {
-        Room.databaseBuilder(
-            appContext,
-            DndToolsDatabase::class.java,
-            "OneShot Database"
+            "Database"
         ).build()
     }
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = Screen.Intro.route) {
         composable(Screen.Intro.route) {
-            val campaigns by campaignDatabase.campaignDao().allCampaigns().collectAsState(initial = emptyList())
-            val oneshots by oneShotDatabase.oneShotDao().allOneShots().collectAsState(initial = emptyList())
+            val campaigns by database.campaignDao().allCampaigns().collectAsState(initial = emptyList())
+            val oneshots by database.oneShotDao().allOneShots().collectAsState(initial = emptyList())
             IntroScreen(campaigns = campaigns, oneShots = oneshots, introViewModel = IntroViewModel()) { results ->
                 navController.navigate(
                     "add/$results"
@@ -80,13 +73,13 @@ fun DndToolsApp() {
             AddScreen(
                 onCampaignEntered = { newCampaign ->
                     addScreenScope.launch {
-                        campaignDatabase.campaignDao().insertCampaign(newCampaign)
+                        database.campaignDao().insertCampaign(newCampaign)
                     }
                     navController.popBackStack()
                 },
                 onOneShotEntered = { newOneShot ->
                     addScreenScope.launch {
-                        oneShotDatabase.oneShotDao().insertOneShot(newOneShot)
+                        database.oneShotDao().insertOneShot(newOneShot)
                     }
                     navController.popBackStack()
                 })
