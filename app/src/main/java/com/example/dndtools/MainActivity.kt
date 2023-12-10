@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -19,6 +21,7 @@ import com.example.dndtools.composables.AddScreen
 import com.example.dndtools.composables.IntroScreen
 import com.example.dndtools.data.DndToolsDatabase
 import com.example.dndtools.ui.theme.DNDToolsTheme
+import com.example.dndtools.viewmodels.IntroViewModel
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -63,7 +66,15 @@ fun DndToolsApp() {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = Screen.Intro.route) {
-        composable(Screen.Intro.route) { IntroScreen { results -> navController.navigate("add/$results") } }
+        composable(Screen.Intro.route) {
+            val campaigns by campaignDatabase.campaignDao().allCampaigns().collectAsState(initial = emptyList())
+            val oneshots by oneShotDatabase.oneShotDao().allOneShots().collectAsState(initial = emptyList())
+            IntroScreen(campaigns = campaigns, oneShots = oneshots, introViewModel = IntroViewModel()) { results ->
+                navController.navigate(
+                    "add/$results"
+                )
+            }
+        }
         composable(Screen.Add.route) {
             val addScreenScope = rememberCoroutineScope()
             AddScreen(

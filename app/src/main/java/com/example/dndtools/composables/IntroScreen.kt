@@ -1,11 +1,14 @@
 package com.example.dndtools.composables
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenuItem
@@ -23,14 +26,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.dndtools.data.Campaign
+import com.example.dndtools.data.OneShot
 import com.example.dndtools.viewmodels.IntroViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun IntroScreen(introViewModel: IntroViewModel = viewModel(), addScreen: (Any?) -> Unit) {
+fun IntroScreen(campaigns: List<Campaign>, oneShots: List<OneShot> ,introViewModel: IntroViewModel = viewModel(), addScreen: (Any?) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
     var selectedAdventureType by remember { mutableStateOf<String?>(null) }
 
@@ -42,13 +46,13 @@ fun IntroScreen(introViewModel: IntroViewModel = viewModel(), addScreen: (Any?) 
         Spacer(modifier = Modifier.size(16.dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
             TextButton(
-                onClick = { introViewModel.results = true; addScreen(Boolean) },
+                onClick = { introViewModel.results = true; addScreen(introViewModel.results) },
                 modifier = Modifier.background(Color.LightGray)
             ) {
                 Text(text = "New Campaign")
             }
             TextButton(
-                onClick = { introViewModel.results = false; addScreen(Boolean) },
+                onClick = { introViewModel.results = false; addScreen(introViewModel.results) },
                 modifier = Modifier.background(Color.LightGray)
             ) {
                 Text(text = "New One-Shot")
@@ -72,21 +76,56 @@ fun IntroScreen(introViewModel: IntroViewModel = viewModel(), addScreen: (Any?) 
                     DropdownMenuItem(
                         text = { Text(text = "Campaign") },
                         onClick = {
-                            selectedAdventureType = "Displaying Campaigns";expanded = false
+                            selectedAdventureType = "Displaying Campaigns" ;expanded = false
                         })
                     DropdownMenuItem(
                         text = { Text(text = "One-Shot") },
                         onClick = {
-                            selectedAdventureType = "Displaying One-Shots"; expanded = false
+                            selectedAdventureType = "Displaying One-Shots" ; expanded = false
                         })
                 }
             }
         }
+        Spacer(modifier = Modifier.size(24.dp))
+        when (selectedAdventureType) {
+            "Campaigns" -> campaigns.forEach { item -> CampaignRow(campaign = item) }
+            "One-Shots" -> oneShots.forEach { item -> OneShotRow(oneShot = item) }
+        }
     }
 }
 
-@Preview(showSystemUi = true)
 @Composable
-fun InitialPreview() {
-    IntroScreen {}
+fun CampaignRow(campaign: Campaign) {
+    Box(modifier = Modifier
+        .padding(horizontal = 24.dp)
+        .fillMaxWidth()
+        .clickable { /*TODO*/ }){
+        Row {
+            Spacer(modifier = Modifier.size(4.dp))
+            Text(text = campaign.title)
+            Spacer(modifier = Modifier.size(4.dp))
+            Text(text = campaign.players.size.toString())
+        }
+    }
 }
+
+@Composable
+fun OneShotRow(oneShot: OneShot) {
+    Box(modifier = Modifier
+        .padding(horizontal = 24.dp)
+        .fillMaxWidth()
+        .clickable { /*TODO*/ }){
+        Row {
+            Spacer(modifier = Modifier.size(4.dp))
+            Text(text = oneShot.shotTitle)
+            Spacer(modifier = Modifier.size(4.dp))
+            Text(text = oneShot.shotPlayers.toString())
+        }
+    }
+}
+
+//@Preview(showSystemUi = true)
+//@Composable
+//fun InitialPreview() {
+//    IntroScreen {}
+//}
