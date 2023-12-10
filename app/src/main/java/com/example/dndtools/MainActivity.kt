@@ -71,11 +71,13 @@ fun DndToolsApp() {
                     addScreenScope.launch {
                         campaignDatabase.campaignDao().insertCampaign(newCampaign)
                     }
+                    navController.popBackStack()
                 },
                 onOneShotEntered = { newOneShot ->
                     addScreenScope.launch {
                         oneShotDatabase.oneShotDao().insertOneShot(newOneShot)
                     }
+                    navController.popBackStack()
                 })
         }
     }
