@@ -13,7 +13,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -22,7 +21,6 @@ import com.example.dndtools.composables.AddScreen
 import com.example.dndtools.composables.IntroScreen
 import com.example.dndtools.data.DndToolsDatabase
 import com.example.dndtools.ui.theme.DNDToolsTheme
-import com.example.dndtools.viewmodels.IntroViewModel
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
