@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeightIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -157,11 +156,19 @@ fun OneShotRow(oneShot: OneShot) {
         .padding(horizontal = 32.dp)
         .fillMaxWidth()
         .clickable { /*TODO*/ }) {
-        Row(modifier = Modifier.padding(vertical = 16.dp)) {
+        Row(modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp)) {
             Spacer(modifier = Modifier.size(4.dp))
-            Text(text = oneShot.shotTitle)
+            Text(
+                text = oneShot.shotTitle, modifier = Modifier
+                    .align(CenterVertically)
+                    .weight(2f), fontWeight = FontWeight.Bold, color = Color.Blue
+            )
             Spacer(modifier = Modifier.size(4.dp))
-            Text(text = oneShot.shotPlayers.toString())
+            Text(
+                text = oneShot.shotPlayers.toString(), modifier = Modifier
+                    .align(CenterVertically)
+                    .weight(0.5f), textAlign = TextAlign.End
+            )
         }
         Divider()
     }
