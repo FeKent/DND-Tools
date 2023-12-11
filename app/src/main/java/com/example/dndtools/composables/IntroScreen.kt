@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.dndtools.data.Campaign
@@ -140,8 +141,26 @@ fun OneShotRow(oneShot: OneShot) {
     }
 }
 
-//@Preview(showSystemUi = true)
-//@Composable
-//fun InitialPreview() {
-//    IntroScreen {}
-//}
+@Preview(showSystemUi = true)
+@Composable
+fun InitialPreview() {
+    val exampleCamps = listOf(
+        Campaign(
+            id = 1,
+            title = "Misfits",
+            players = arrayOf("Fiona", "Cip"),
+            characters = arrayOf("Myra", "Pipin"),
+            setting = "Sword's Coast"
+        )
+    )
+    val exampleOneShot = listOf(
+        OneShot(
+            id = 1,
+            shotTitle = "Moon Over Graymoor",
+            shotPlayers = 3,
+            shotSetting = "Sword's Coast"
+        )
+    )
+
+    IntroScreen(campaigns = exampleCamps, oneShots = exampleOneShot) {}
+}
