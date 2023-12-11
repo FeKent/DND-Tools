@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -24,9 +25,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -114,30 +118,32 @@ fun IntroScreen(
 @Composable
 fun CampaignRow(campaign: Campaign) {
     Box(modifier = Modifier
-        .padding(horizontal = 24.dp)
+        .padding(horizontal = 32.dp)
         .fillMaxWidth()
         .clickable { /*TODO*/ }) {
-        Row {
+        Row(modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp)) {
             Spacer(modifier = Modifier.size(4.dp))
-            Text(text = campaign.title)
+            Text(text = campaign.title, modifier = Modifier.align(CenterVertically).weight(2f), fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.size(4.dp))
-            Text(text = campaign.players.size.toString())
+            Text(text = campaign.players.size.toString(), modifier = Modifier.align(CenterVertically).weight(0.5f), textAlign = TextAlign.End)
         }
+        Divider()
     }
 }
 
 @Composable
 fun OneShotRow(oneShot: OneShot) {
     Box(modifier = Modifier
-        .padding(horizontal = 24.dp)
+        .padding(horizontal = 32.dp)
         .fillMaxWidth()
         .clickable { /*TODO*/ }) {
-        Row {
+        Row(modifier = Modifier.padding(vertical = 16.dp)) {
             Spacer(modifier = Modifier.size(4.dp))
             Text(text = oneShot.shotTitle)
             Spacer(modifier = Modifier.size(4.dp))
             Text(text = oneShot.shotPlayers.toString())
         }
+        Divider()
     }
 }
 
@@ -147,7 +153,7 @@ fun InitialPreview() {
     val exampleCamps = listOf(
         Campaign(
             id = 1,
-            title = "Misfits",
+            title = "Misfits of Fire and Dice",
             players = arrayOf("Fiona", "Cip"),
             characters = arrayOf("Myra", "Pipin"),
             setting = "Sword's Coast"
