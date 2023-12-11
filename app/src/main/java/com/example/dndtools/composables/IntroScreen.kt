@@ -9,7 +9,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeightIn
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenuItem
@@ -94,13 +97,21 @@ fun IntroScreen(
                         onClick = {
                             selectedAdventureType = "Displaying One-Shots"; expanded = false
                         })
+                    DropdownMenuItem(
+                        text = { Text(text = "Both") },
+                        onClick = {
+                            selectedAdventureType = "Select Adventure Type"; expanded = false
+                        })
                 }
             }
         }
         Spacer(modifier = Modifier.size(24.dp))
 
         Column(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+                .weight(1f),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             if (selectedAdventureType?.contains("One-Shots") == true) {
@@ -124,13 +135,17 @@ fun CampaignRow(campaign: Campaign) {
         .clickable { /*TODO*/ }) {
         Row(modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp)) {
             Spacer(modifier = Modifier.size(4.dp))
-            Text(text = campaign.title, modifier = Modifier
-                .align(CenterVertically)
-                .weight(2f), fontWeight = FontWeight.Bold)
+            Text(
+                text = campaign.title, modifier = Modifier
+                    .align(CenterVertically)
+                    .weight(2f), fontWeight = FontWeight.Bold
+            )
             Spacer(modifier = Modifier.size(4.dp))
-            Text(text = campaign.players.size.toString(), modifier = Modifier
-                .align(CenterVertically)
-                .weight(0.5f), textAlign = TextAlign.End)
+            Text(
+                text = campaign.players.size.toString(), modifier = Modifier
+                    .align(CenterVertically)
+                    .weight(0.5f), textAlign = TextAlign.End
+            )
         }
         Divider()
     }
@@ -162,6 +177,12 @@ fun InitialPreview() {
             players = arrayOf("Fiona", "Cip"),
             characters = arrayOf("Myra", "Pipin"),
             setting = "Sword's Coast"
+        ), Campaign(
+            id = 1,
+            title = "Once and Again",
+            players = arrayOf("Snippy", "Elise", "Alex", "Sam"),
+            characters = arrayOf("Kitt", "Milee", "Gallifrey", "Wyrm"),
+            setting = "Verulien"
         )
     )
     val exampleOneShot = listOf(
