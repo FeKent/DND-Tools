@@ -111,6 +111,7 @@ fun IntroScreen(
                 oneShots.forEach { item -> OneShotRow(oneShot = item) }
                 campaigns.forEach { item -> CampaignRow(campaign = item) }
             }
+            Divider(modifier = Modifier.padding(horizontal = 32.dp))
         }
     }
 }
@@ -123,9 +124,13 @@ fun CampaignRow(campaign: Campaign) {
         .clickable { /*TODO*/ }) {
         Row(modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp)) {
             Spacer(modifier = Modifier.size(4.dp))
-            Text(text = campaign.title, modifier = Modifier.align(CenterVertically).weight(2f), fontWeight = FontWeight.Bold)
+            Text(text = campaign.title, modifier = Modifier
+                .align(CenterVertically)
+                .weight(2f), fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.size(4.dp))
-            Text(text = campaign.players.size.toString(), modifier = Modifier.align(CenterVertically).weight(0.5f), textAlign = TextAlign.End)
+            Text(text = campaign.players.size.toString(), modifier = Modifier
+                .align(CenterVertically)
+                .weight(0.5f), textAlign = TextAlign.End)
         }
         Divider()
     }
