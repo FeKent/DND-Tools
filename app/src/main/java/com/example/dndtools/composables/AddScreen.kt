@@ -1,5 +1,8 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.example.dndtools.composables
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,8 +16,12 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -54,9 +62,20 @@ fun AddScreen(
     var shotPlayers by remember { mutableStateOf("") }
     var shotSetting by remember { mutableStateOf("") }
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = MaterialTheme.colorScheme.background)
+    ) {
         CenterAlignedTopAppBar(
-            title = { if(results) {Text(text = "Add Campaign")} else {Text(text = "Add One-Shot")} },
+            title = {
+                if (results) {
+                    Text(text = "Add Campaign", color = MaterialTheme.colorScheme.secondary, fontWeight = FontWeight.ExtraBold)
+                } else {
+                    Text(text = "Add One-Shot", color = MaterialTheme.colorScheme.secondary, fontWeight = FontWeight.ExtraBold)
+                }
+            },
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary),
             modifier = Modifier.shadow(4.dp)
         )
         Spacer(modifier = Modifier.size(32.dp))
@@ -105,7 +124,7 @@ fun AddScreen(
 
             }
         }
-        Spacer(modifier = Modifier.size(8.dp))
+        Spacer(modifier = Modifier.size(32.dp))
 
         if (results) {
             IconButton(onClick = {
@@ -117,7 +136,7 @@ fun AddScreen(
                 )
                 onCampaignEntered?.invoke(newCampaign)
             }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                Icon(Icons.Filled.Add, "Add Campaign")
+                Icon(Icons.Filled.Add, "Add Campaign", tint = MaterialTheme.colorScheme.onBackground, modifier = Modifier.size(60.dp))
             }
         } else {
             IconButton(onClick = {
@@ -128,7 +147,7 @@ fun AddScreen(
                 )
                 onOneShotEntered?.invoke(newOneShot)
             }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                Icon(Icons.Filled.Add, "Add One-Shot")
+                Icon(Icons.Filled.Add, "Add One-Shot", tint = MaterialTheme.colorScheme.onBackground, modifier = Modifier.size(60.dp))
             }
         }
 
@@ -144,12 +163,13 @@ fun AddTextField(
 ) {
     TextField(
         value = value, onValueChange = { onValueChange(it) }, singleLine = true,
-        label = { Text(text = label) },
+        label = { Text(text = label, color = MaterialTheme.colorScheme.primary) },
         keyboardOptions = KeyboardOptions(
             imeAction = ImeAction.Next,
             capitalization = KeyboardCapitalization.Words
         ),
-        modifier = modifier
+        modifier = modifier,
+        colors = TextFieldDefaults.textFieldColors(containerColor = MaterialTheme.colorScheme.onPrimary)
     )
 }
 
@@ -162,11 +182,12 @@ fun AddNumField(
 ) {
     TextField(
         value = value, onValueChange = { onValueChange(it) }, singleLine = true,
-        label = { Text(text = label) },
+        label = { Text(text = label, color = MaterialTheme.colorScheme.primary) },
         keyboardOptions = KeyboardOptions(
             imeAction = ImeAction.Next, keyboardType = KeyboardType.Number
         ),
-        modifier = modifier
+        modifier = modifier,
+        colors = TextFieldDefaults.textFieldColors(containerColor = MaterialTheme.colorScheme.onPrimary)
     )
 }
 
@@ -176,8 +197,8 @@ fun AddNumField(
 fun AddPreview() {
     DNDToolsTheme {
         val viewModel = remember {
-            AddViewModel(savedStateHandle = SavedStateHandle(mapOf("results" to "true")))
+            AddViewModel(savedStateHandle = SavedStateHandle(mapOf("results" to "false")))
         }
-        AddScreen(addViewModel = viewModel){}
+        AddScreen(addViewModel = viewModel) {}
     }
 }

@@ -56,7 +56,7 @@ fun IntroScreen(
 
     Column(modifier = Modifier.background(color = MaterialTheme.colorScheme.background)) {
         CenterAlignedTopAppBar(
-            title = { Text(text = "Welcome GM!", color = MaterialTheme.colorScheme.secondary) },
+            title = { Text(text = "Welcome GM!", color = MaterialTheme.colorScheme.secondary, fontWeight = FontWeight.ExtraBold) },
             colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary),
             modifier = Modifier
                 .shadow(4.dp)
