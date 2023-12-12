@@ -26,10 +26,13 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.dndtools.data.Campaign
 import com.example.dndtools.data.OneShot
+import com.example.dndtools.ui.theme.DNDToolsTheme
 import com.example.dndtools.viewmodels.AddViewModel
 
 
@@ -168,8 +171,13 @@ fun AddNumField(
 }
 
 
-//@Preview(showSystemUi = true)
-//@Composable
-//fun AddPreview() {
-//    AddScreen{}
-//}
+@Preview(showSystemUi = true)
+@Composable
+fun AddPreview() {
+    DNDToolsTheme {
+        val viewModel = remember {
+            AddViewModel(savedStateHandle = SavedStateHandle(mapOf("results" to "true")))
+        }
+        AddScreen(addViewModel = viewModel){}
+    }
+}

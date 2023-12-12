@@ -32,7 +32,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,7 +40,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.dndtools.data.Campaign
 import com.example.dndtools.data.OneShot
 import com.example.dndtools.ui.theme.DNDToolsTheme
-import com.example.dndtools.ui.theme.dark1
 import com.example.dndtools.ui.theme.light1
 import com.example.dndtools.viewmodels.IntroViewModel
 
