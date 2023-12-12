@@ -66,13 +66,13 @@ fun IntroScreen(
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
             TextButton(
                 onClick = { introViewModel.results = true; addScreen(introViewModel.results) },
-                modifier = Modifier.background(MaterialTheme.colorScheme.onPrimary),
+                modifier = Modifier.background(MaterialTheme.colorScheme.onPrimary)
             ) {
                 Text(text = "New Campaign")
             }
             TextButton(
                 onClick = { introViewModel.results = false; addScreen(introViewModel.results) },
-                modifier = Modifier.background(Color.LightGray)
+                modifier = Modifier.background(MaterialTheme.colorScheme.onPrimary)
             ) {
                 Text(text = "New One-Shot")
             }
