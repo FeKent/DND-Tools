@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,6 +41,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.dndtools.data.Campaign
 import com.example.dndtools.data.OneShot
 import com.example.dndtools.ui.theme.DNDToolsTheme
+import com.example.dndtools.ui.theme.dark1
+import com.example.dndtools.ui.theme.light1
 import com.example.dndtools.viewmodels.IntroViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,8 +58,8 @@ fun IntroScreen(
 
     Column(modifier = Modifier.background(color = MaterialTheme.colorScheme.background)) {
         CenterAlignedTopAppBar(
-            title = { Text(text = "Welcome GM!", color = MaterialTheme.colorScheme.secondary)},
-            colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary) ,
+            title = { Text(text = "Welcome GM!", color = MaterialTheme.colorScheme.secondary) },
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary),
             modifier = Modifier
                 .shadow(4.dp)
                 .background(color = MaterialTheme.colorScheme.primary)
@@ -87,7 +90,10 @@ fun IntroScreen(
                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
                     },
                     placeholder = {
-                        Text(text = "Select Adventure Type", color = MaterialTheme.colorScheme.primary)
+                        Text(
+                            text = "Select Adventure Type",
+                            color = MaterialTheme.colorScheme.primary
+                        )
                     }, modifier = Modifier.menuAnchor()
                 )
                 ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
@@ -110,6 +116,28 @@ fun IntroScreen(
             }
         }
         Spacer(modifier = Modifier.size(24.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 36.dp)
+                .padding(bottom = 10.dp)
+        ) {
+            Text(
+                text = "Title",
+                modifier = Modifier
+                    .weight(2f)
+                    .padding(horizontal = 16.dp),
+                fontWeight = FontWeight.SemiBold,
+                color = light1
+            )
+            Text(
+                text = "Players",
+                modifier = Modifier.weight(2f),
+                textAlign = TextAlign.End,
+                fontWeight = FontWeight.SemiBold,
+                color = light1
+            )
+        }
 
         Column(
             modifier = Modifier
@@ -140,15 +168,22 @@ fun CampaignRow(campaign: Campaign) {
         Row(modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp)) {
             Spacer(modifier = Modifier.size(4.dp))
             Text(
-                text = campaign.title, modifier = Modifier
+                text = campaign.title,
+                modifier = Modifier
                     .align(CenterVertically)
-                    .weight(2f), fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground
+                    .weight(2f),
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground
             )
             Spacer(modifier = Modifier.size(4.dp))
             Text(
-                text = campaign.players.size.toString(), modifier = Modifier
+                text = campaign.players.size.toString(),
+                modifier = Modifier
                     .align(CenterVertically)
-                    .weight(0.5f), textAlign = TextAlign.End, color = MaterialTheme.colorScheme.onBackground
+                    .weight(0.5f),
+                textAlign = TextAlign.End,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground
             )
         }
         Divider()
@@ -164,15 +199,22 @@ fun OneShotRow(oneShot: OneShot) {
         Row(modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp)) {
             Spacer(modifier = Modifier.size(4.dp))
             Text(
-                text = oneShot.shotTitle, color = MaterialTheme.colorScheme.secondary, modifier = Modifier
+                text = oneShot.shotTitle,
+                color = MaterialTheme.colorScheme.secondary,
+                modifier = Modifier
                     .align(CenterVertically)
-                    .weight(2f), fontWeight = FontWeight.Bold
+                    .weight(2f),
+                fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.size(4.dp))
             Text(
-                text = oneShot.shotPlayers.toString(), modifier = Modifier
+                text = oneShot.shotPlayers.toString(),
+                modifier = Modifier
                     .align(CenterVertically)
-                    .weight(0.5f), textAlign = TextAlign.End, color = MaterialTheme.colorScheme.secondary
+                    .weight(0.5f),
+                textAlign = TextAlign.End,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.secondary
             )
         }
         Divider()

@@ -3,7 +3,7 @@ package com.example.dndtools.ui.theme
 import androidx.compose.ui.graphics.Color
 
 
-
+val light1 = Color(255, 255, 208)
 val light2 = Color(218, 216, 115)
 val dark1 = Color(48, 153, 117)
 val dark2 = Color(69, 77, 102)
