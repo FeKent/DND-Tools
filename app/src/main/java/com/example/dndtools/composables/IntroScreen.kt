@@ -18,9 +18,11 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.dndtools.data.Campaign
 import com.example.dndtools.data.OneShot
+import com.example.dndtools.ui.theme.DNDToolsTheme
 import com.example.dndtools.viewmodels.IntroViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,16 +54,19 @@ fun IntroScreen(
     var expanded by remember { mutableStateOf(false) }
     var selectedAdventureType by remember { mutableStateOf<String?>(null) }
 
-    Column {
+    Column(modifier = Modifier.background(color = MaterialTheme.colorScheme.background)) {
         CenterAlignedTopAppBar(
-            title = { Text(text = "Welcome GM!") },
-            modifier = Modifier.shadow(4.dp)
+            title = { Text(text = "Welcome GM!", color = MaterialTheme.colorScheme.secondary)},
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary) ,
+            modifier = Modifier
+                .shadow(4.dp)
+                .background(color = MaterialTheme.colorScheme.primary)
         )
         Spacer(modifier = Modifier.size(16.dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
             TextButton(
                 onClick = { introViewModel.results = true; addScreen(introViewModel.results) },
-                modifier = Modifier.background(Color.LightGray)
+                modifier = Modifier.background(MaterialTheme.colorScheme.onPrimary),
             ) {
                 Text(text = "New Campaign")
             }
@@ -82,7 +88,7 @@ fun IntroScreen(
                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
                     },
                     placeholder = {
-                        Text(text = "Select Adventure Type")
+                        Text(text = "Select Adventure Type", color = MaterialTheme.colorScheme.primary)
                     }, modifier = Modifier.menuAnchor()
                 )
                 ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
@@ -137,13 +143,13 @@ fun CampaignRow(campaign: Campaign) {
             Text(
                 text = campaign.title, modifier = Modifier
                     .align(CenterVertically)
-                    .weight(2f), fontWeight = FontWeight.Bold
+                    .weight(2f), fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground
             )
             Spacer(modifier = Modifier.size(4.dp))
             Text(
                 text = campaign.players.size.toString(), modifier = Modifier
                     .align(CenterVertically)
-                    .weight(0.5f), textAlign = TextAlign.End
+                    .weight(0.5f), textAlign = TextAlign.End, color = MaterialTheme.colorScheme.onBackground
             )
         }
         Divider()
@@ -159,22 +165,22 @@ fun OneShotRow(oneShot: OneShot) {
         Row(modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp)) {
             Spacer(modifier = Modifier.size(4.dp))
             Text(
-                text = oneShot.shotTitle, modifier = Modifier
+                text = oneShot.shotTitle, color = MaterialTheme.colorScheme.secondary, modifier = Modifier
                     .align(CenterVertically)
-                    .weight(2f), fontWeight = FontWeight.Bold, color = Color.Blue
+                    .weight(2f), fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.size(4.dp))
             Text(
                 text = oneShot.shotPlayers.toString(), modifier = Modifier
                     .align(CenterVertically)
-                    .weight(0.5f), textAlign = TextAlign.End
+                    .weight(0.5f), textAlign = TextAlign.End, color = MaterialTheme.colorScheme.secondary
             )
         }
         Divider()
     }
 }
 
-@Preview(showSystemUi = true)
+@Preview(showSystemUi = true, /*uiMode = UI_MODE_NIGHT_YES*/)
 @Composable
 fun InitialPreview() {
     val exampleCamps = listOf(
@@ -200,6 +206,7 @@ fun InitialPreview() {
             shotSetting = "Sword's Coast"
         )
     )
-
-    IntroScreen(campaigns = exampleCamps, oneShots = exampleOneShot) {}
+    DNDToolsTheme {
+        IntroScreen(campaigns = exampleCamps, oneShots = exampleOneShot) {}
+    }
 }
