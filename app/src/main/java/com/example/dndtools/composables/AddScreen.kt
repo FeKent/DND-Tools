@@ -3,6 +3,7 @@
 package com.example.dndtools.composables
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -19,7 +21,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -30,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -49,7 +51,8 @@ import com.example.dndtools.viewmodels.AddViewModel
 fun AddScreen(
     addViewModel: AddViewModel = viewModel(),
     onCampaignEntered: ((Campaign) -> Unit)? = null,
-    onOneShotEntered: ((OneShot) -> Unit)? = null
+    onOneShotEntered: ((OneShot) -> Unit)? = null,
+    back: () -> Unit,
 ) {
     val results = addViewModel.results
 
@@ -70,13 +73,32 @@ fun AddScreen(
         CenterAlignedTopAppBar(
             title = {
                 if (results) {
-                    Text(text = "Add Campaign", color = MaterialTheme.colorScheme.secondary, fontWeight = FontWeight.ExtraBold)
+                    Text(
+                        text = "Add Campaign",
+                        color = MaterialTheme.colorScheme.secondary,
+                        fontWeight = FontWeight.ExtraBold
+                    )
                 } else {
-                    Text(text = "Add One-Shot", color = MaterialTheme.colorScheme.secondary, fontWeight = FontWeight.ExtraBold)
+                    Text(
+                        text = "Add One-Shot",
+                        color = MaterialTheme.colorScheme.secondary,
+                        fontWeight = FontWeight.ExtraBold
+                    )
                 }
             },
             colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary),
-            modifier = Modifier.shadow(4.dp)
+            modifier = Modifier.shadow(4.dp),
+            navigationIcon = {
+                Icon(
+                    Icons.Filled.KeyboardArrowLeft,
+                    "Back",
+                    tint = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clickable {
+                            back()
+                        })
+            }
         )
         Spacer(modifier = Modifier.size(32.dp))
         Box {
@@ -136,7 +158,12 @@ fun AddScreen(
                 )
                 onCampaignEntered?.invoke(newCampaign)
             }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                Icon(Icons.Filled.Add, "Add Campaign", tint = MaterialTheme.colorScheme.onBackground, modifier = Modifier.size(60.dp))
+                Icon(
+                    Icons.Filled.Add,
+                    "Add Campaign",
+                    tint = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier.size(80.dp)
+                )
             }
         } else {
             IconButton(onClick = {
@@ -147,7 +174,12 @@ fun AddScreen(
                 )
                 onOneShotEntered?.invoke(newOneShot)
             }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                Icon(Icons.Filled.Add, "Add One-Shot", tint = MaterialTheme.colorScheme.onBackground, modifier = Modifier.size(60.dp))
+                Icon(
+                    Icons.Filled.Add,
+                    "Add One-Shot",
+                    tint = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier.size(80.dp)
+                )
             }
         }
 
@@ -169,7 +201,12 @@ fun AddTextField(
             capitalization = KeyboardCapitalization.Words
         ),
         modifier = modifier,
-        colors = TextFieldDefaults.textFieldColors(containerColor = MaterialTheme.colorScheme.onPrimary)
+        colors = TextFieldDefaults.colors(
+            focusedContainerColor = MaterialTheme.colorScheme.onPrimary,
+            unfocusedContainerColor = MaterialTheme.colorScheme.onPrimary,
+            disabledContainerColor = MaterialTheme.colorScheme.onPrimary,
+        ),
+        textStyle = TextStyle(color = MaterialTheme.colorScheme.primary)
     )
 }
 
@@ -187,7 +224,12 @@ fun AddNumField(
             imeAction = ImeAction.Next, keyboardType = KeyboardType.Number
         ),
         modifier = modifier,
-        colors = TextFieldDefaults.textFieldColors(containerColor = MaterialTheme.colorScheme.onPrimary)
+        colors = TextFieldDefaults.colors(
+            focusedContainerColor = MaterialTheme.colorScheme.onPrimary,
+            unfocusedContainerColor = MaterialTheme.colorScheme.onPrimary,
+            disabledContainerColor = MaterialTheme.colorScheme.onPrimary,
+        ),
+        textStyle = TextStyle(color = MaterialTheme.colorScheme.primary)
     )
 }
 

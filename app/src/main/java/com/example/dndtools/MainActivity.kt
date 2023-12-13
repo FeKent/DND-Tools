@@ -82,7 +82,8 @@ fun DndToolsApp() {
                         database.oneShotDao().insertOneShot(newOneShot)
                     }
                     navController.popBackStack()
-                })
+                },
+                back = {navController.navigate("intro")})
         }
     }
 }

@@ -22,6 +22,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -32,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,6 +42,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.dndtools.data.Campaign
 import com.example.dndtools.data.OneShot
 import com.example.dndtools.ui.theme.DNDToolsTheme
+import com.example.dndtools.ui.theme.cambridge
 import com.example.dndtools.ui.theme.light1
 import com.example.dndtools.viewmodels.IntroViewModel
 
@@ -56,7 +59,13 @@ fun IntroScreen(
 
     Column(modifier = Modifier.background(color = MaterialTheme.colorScheme.background)) {
         CenterAlignedTopAppBar(
-            title = { Text(text = "Welcome GM!", color = MaterialTheme.colorScheme.secondary, fontWeight = FontWeight.ExtraBold) },
+            title = {
+                Text(
+                    text = "Welcome GM!",
+                    color = MaterialTheme.colorScheme.secondary,
+                    fontWeight = FontWeight.ExtraBold
+                )
+            },
             colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary),
             modifier = Modifier
                 .shadow(4.dp)
@@ -81,7 +90,9 @@ fun IntroScreen(
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             ExposedDropdownMenuBox(
                 expanded = expanded,
-                onExpandedChange = { newValue -> expanded = newValue }) {
+                onExpandedChange = { newValue -> expanded = newValue },
+                modifier = Modifier.background(MaterialTheme.colorScheme.onPrimary)
+            ) {
                 TextField(
                     value = selectedAdventureType ?: "", onValueChange = {}, readOnly = true,
                     trailingIcon = {
@@ -92,21 +103,59 @@ fun IntroScreen(
                             text = "Select Adventure Type",
                             color = MaterialTheme.colorScheme.primary
                         )
-                    }, modifier = Modifier.menuAnchor()
+                    }, modifier = Modifier.menuAnchor(), colors = TextFieldDefaults.colors(
+                        focusedContainerColor = MaterialTheme.colorScheme.onPrimary,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.onPrimary,
+                        disabledContainerColor = MaterialTheme.colorScheme.onPrimary,
+                    ),
+                    textStyle = TextStyle(color = MaterialTheme.colorScheme.primary)
                 )
-                ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                    modifier = Modifier.background(cambridge)
+                ) {
                     DropdownMenuItem(
-                        text = { Text(text = "Campaign") },
+                        text = {
+                            Text(
+                                text = "Campaign",
+                                color = MaterialTheme.colorScheme.primary,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        },
                         onClick = {
                             selectedAdventureType = "Displaying Campaigns";expanded = false
                         })
+                    Divider(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        color = MaterialTheme.colorScheme.primary
+                    )
                     DropdownMenuItem(
-                        text = { Text(text = "One-Shot") },
+                        text = {
+                            Text(
+                                text = "One-Shot",
+                                color = MaterialTheme.colorScheme.primary,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        },
                         onClick = {
                             selectedAdventureType = "Displaying One-Shots"; expanded = false
                         })
+                    Divider(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        color = MaterialTheme.colorScheme.primary
+                    )
                     DropdownMenuItem(
-                        text = { Text(text = "Both") },
+                        text = {
+                            Text(
+                                text = "Both",
+                                color = MaterialTheme.colorScheme.primary,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        },
                         onClick = {
                             selectedAdventureType = "Select Adventure Type"; expanded = false
                         })
@@ -193,7 +242,8 @@ fun OneShotRow(oneShot: OneShot) {
     Box(modifier = Modifier
         .padding(horizontal = 32.dp)
         .fillMaxWidth()
-        .clickable { /*TODO*/ }) {
+        .clickable { /*TODO*/ }
+    ) {
         Row(modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp)) {
             Spacer(modifier = Modifier.size(4.dp))
             Text(
