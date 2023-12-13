@@ -107,6 +107,9 @@ fun IntroScreen(
                         focusedContainerColor = MaterialTheme.colorScheme.onPrimary,
                         unfocusedContainerColor = MaterialTheme.colorScheme.onPrimary,
                         disabledContainerColor = MaterialTheme.colorScheme.onPrimary,
+                        focusedTrailingIconColor = MaterialTheme.colorScheme.primary,
+                        unfocusedTrailingIconColor = MaterialTheme.colorScheme.primary,
+                        disabledTrailingIconColor = MaterialTheme.colorScheme.primary,
                     ),
                     textStyle = TextStyle(color = MaterialTheme.colorScheme.primary)
                 )
