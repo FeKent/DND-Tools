@@ -52,7 +52,9 @@ fun IntroScreen(
     campaigns: List<Campaign>,
     oneShots: List<OneShot>,
     introViewModel: IntroViewModel = viewModel(),
-    addScreen: (Any?) -> Unit
+    addScreen: (Any?) -> Unit,
+    onCampaignTap: (Campaign) -> Unit,
+    onShotTap: (OneShot) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     var selectedAdventureType by remember { mutableStateOf<String?>(null) }
@@ -197,12 +199,12 @@ fun IntroScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             if (selectedAdventureType?.contains("One-Shots") == true) {
-                oneShots.forEach { item -> OneShotRow(oneShot = item) }
+                oneShots.forEach { item -> OneShotRow(oneShot = item, onShotTap = onShotTap) }
             } else if (selectedAdventureType?.contains("Campaign") == true) {
-                campaigns.forEach { item -> CampaignRow(campaign = item) }
+                campaigns.forEach { item -> CampaignRow(campaign = item, onCampaignTap =  onCampaignTap ) }
             } else {
-                oneShots.forEach { item -> OneShotRow(oneShot = item) }
-                campaigns.forEach { item -> CampaignRow(campaign = item) }
+                oneShots.forEach { item -> OneShotRow(oneShot = item, onShotTap = onShotTap) }
+                campaigns.forEach { item -> CampaignRow(campaign = item, onCampaignTap =  onCampaignTap ) }
             }
             Divider(modifier = Modifier.padding(horizontal = 32.dp), color = MaterialTheme.colorScheme.onBackground)
         }
@@ -210,11 +212,11 @@ fun IntroScreen(
 }
 
 @Composable
-fun CampaignRow(campaign: Campaign) {
+fun CampaignRow(campaign: Campaign, onCampaignTap: (Campaign) -> Unit) {
     Box(modifier = Modifier
         .padding(horizontal = 32.dp)
         .fillMaxWidth()
-        .clickable { /*TODO*/ }) {
+        .clickable { onCampaignTap }) {
         Row(modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp)) {
             Spacer(modifier = Modifier.size(4.dp))
             Text(
@@ -241,11 +243,11 @@ fun CampaignRow(campaign: Campaign) {
 }
 
 @Composable
-fun OneShotRow(oneShot: OneShot) {
+fun OneShotRow(oneShot: OneShot, onShotTap: (OneShot) -> Unit) {
     Box(modifier = Modifier
         .padding(horizontal = 32.dp)
         .fillMaxWidth()
-        .clickable { /*TODO*/ }
+        .clickable { onShotTap }
     ) {
         Row(modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp)) {
             Spacer(modifier = Modifier.size(4.dp))
@@ -299,6 +301,6 @@ fun InitialPreview() {
         )
     )
     DNDToolsTheme {
-        IntroScreen(campaigns = exampleCamps, oneShots = exampleOneShot) {}
+        IntroScreen(campaigns = exampleCamps, oneShots = exampleOneShot, onCampaignTap = {}, onShotTap = {}, addScreen = {})
     }
 }
