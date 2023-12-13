@@ -204,7 +204,7 @@ fun IntroScreen(
                 oneShots.forEach { item -> OneShotRow(oneShot = item) }
                 campaigns.forEach { item -> CampaignRow(campaign = item) }
             }
-            Divider(modifier = Modifier.padding(horizontal = 32.dp))
+            Divider(modifier = Modifier.padding(horizontal = 32.dp), color = MaterialTheme.colorScheme.onBackground)
         }
     }
 }
@@ -236,7 +236,7 @@ fun CampaignRow(campaign: Campaign) {
                 color = MaterialTheme.colorScheme.onBackground
             )
         }
-        Divider()
+        Divider(color = MaterialTheme.colorScheme.onBackground)
     }
 }
 
@@ -268,7 +268,7 @@ fun OneShotRow(oneShot: OneShot) {
                 color = MaterialTheme.colorScheme.secondary
             )
         }
-        Divider()
+        Divider(color = MaterialTheme.colorScheme.onBackground)
     }
 }
 
