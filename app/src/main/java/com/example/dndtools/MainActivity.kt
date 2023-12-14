@@ -70,9 +70,16 @@ fun DndToolsApp() {
             IntroScreen(
                 campaigns = campaigns,
                 oneShots = oneshots,
-                onShotTap = { oneShot -> navController.navigate("selection/${oneShot?.id ?: "null"}/${null}") },
-                onCampaignTap = { campaign -> navController.navigate("selection/${null}/${campaign?.id ?: "null"}")},
-                addScreen = { results -> navController.navigate("add/$results") })
+                onShotTap = { oneShot ->
+                    navController.navigate(Screen.Selection.route + "?oneShotId=${oneShot?.id}")
+                },
+                onCampaignTap = { campaign ->
+                    navController.navigate(Screen.Selection.route + "?campaignId=${campaign?.id}")
+                },
+                addScreen = { results ->
+                    navController.navigate(Screen.Add.route + "/$results")
+                }
+            )
         }
         composable(Screen.Add.route) {
             val addScreenScope = rememberCoroutineScope()
@@ -91,8 +98,11 @@ fun DndToolsApp() {
                 },
                 back = { navController.navigate("intro") })
         }
-        composable(Screen.Selection.route) {
-            SelectionScreen(back = { navController.navigate("intro") })
+        composable(Screen.Selection.route) { navBackStackEntry ->
+            val oneShotId = navBackStackEntry.arguments?.getString("oneShotId")?.toIntOrNull()
+            val campaignId = navBackStackEntry.arguments?.getString("campaignId")?.toIntOrNull()
+
+            SelectionScreen(back = {navController.navigate("intro")}, oneShotId = oneShotId, campaignId = campaignId)
         }
     }
 }

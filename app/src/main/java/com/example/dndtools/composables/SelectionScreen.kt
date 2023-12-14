@@ -15,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -27,18 +28,28 @@ import com.example.dndtools.ui.theme.DNDToolsTheme
 import com.example.dndtools.viewmodels.SelectionViewModel
 
 @Composable
-fun SelectionScreen(back: () -> Unit, selectionViewModel: SelectionViewModel = viewModel()) {
+fun SelectionScreen(back: () -> Unit, oneShotId: Int?, campaignId: Int?) {
+    val selectionViewModel: SelectionViewModel = viewModel()
+    selectionViewModel.fetchInitialData()
+
+    LaunchedEffect(key1 = oneShotId, key2 = campaignId) {
+        if (oneShotId != null) {
+            selectionViewModel.fetchOneShotById(oneShotId)
+        } else if (campaignId != null) {
+            selectionViewModel.fetchCampaignById(campaignId)
+        }
+    }
+
     val campaign by selectionViewModel.campaign.observeAsState()
     val oneShot by selectionViewModel.oneShot.observeAsState()
 
-    val label = if(campaign == null){
+    val label = if (campaign == null) {
         oneShot?.shotTitle.toString()
-    } else if (oneShot == null){
+    } else if (oneShot == null) {
         campaign?.title.toString()
     } else {
         "Error"
     }
-
 
     Column(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
         CenterAlignedTopAppBar(
@@ -60,7 +71,8 @@ fun SelectionScreen(back: () -> Unit, selectionViewModel: SelectionViewModel = v
                         .size(40.dp)
                         .clickable {
                             back()
-                        })
+                        }
+                )
             }
         )
     }
@@ -70,6 +82,6 @@ fun SelectionScreen(back: () -> Unit, selectionViewModel: SelectionViewModel = v
 @Composable
 fun SelectionPreview() {
     DNDToolsTheme {
-        SelectionScreen({})
+
     }
 }
