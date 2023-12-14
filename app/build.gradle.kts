@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
+    id ("kotlin-parcelize")
 }
 
 android {
@@ -53,6 +54,7 @@ android {
 
 dependencies {
 
+    implementation ("org.jetbrains.kotlin:kotlin-stdlib:1.9.21")
     implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
     implementation("androidx.room:room-ktx:2.6.1")
     ksp("androidx.room:room-compiler:2.6.1")

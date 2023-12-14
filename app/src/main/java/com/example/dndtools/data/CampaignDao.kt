@@ -20,4 +20,7 @@ interface CampaignDao {
 
     @Query ("SELECT * FROM campaign")
     fun allCampaigns(): Flow<List<Campaign>>
+
+    @Query("SELECT * FROM Campaign WHERE id = :campaignId")
+    suspend fun getCampaignById(campaignId: Int): Campaign?
 }

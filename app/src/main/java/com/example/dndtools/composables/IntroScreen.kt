@@ -216,7 +216,7 @@ fun CampaignRow(campaign: Campaign, onCampaignTap: (Campaign) -> Unit) {
     Box(modifier = Modifier
         .padding(horizontal = 32.dp)
         .fillMaxWidth()
-        .clickable { onCampaignTap }) {
+        .clickable { onCampaignTap(campaign) }) {
         Row(modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp)) {
             Spacer(modifier = Modifier.size(4.dp))
             Text(
@@ -247,7 +247,7 @@ fun OneShotRow(oneShot: OneShot, onShotTap: (OneShot) -> Unit) {
     Box(modifier = Modifier
         .padding(horizontal = 32.dp)
         .fillMaxWidth()
-        .clickable { onShotTap }
+        .clickable { onShotTap(oneShot) }
     ) {
         Row(modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp)) {
             Spacer(modifier = Modifier.size(4.dp))

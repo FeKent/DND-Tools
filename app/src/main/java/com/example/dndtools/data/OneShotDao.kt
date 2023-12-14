@@ -22,4 +22,7 @@ interface OneShotDao {
 
     @Query ("SELECT * FROM oneshot")
     fun allOneShots(): Flow<List<OneShot>>
+
+    @Query("SELECT * FROM OneShot WHERE id = :oneShotId")
+    suspend fun getOneShotById(oneShotId: Int): OneShot?
 }
