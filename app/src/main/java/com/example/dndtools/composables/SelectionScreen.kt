@@ -15,27 +15,28 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.dndtools.data.Campaign
-import com.example.dndtools.data.OneShot
 import com.example.dndtools.ui.theme.DNDToolsTheme
 import com.example.dndtools.viewmodels.SelectionViewModel
 
 @Composable
-fun SelectionScreen(campaign: Campaign?, oneShot: OneShot?, back: () -> Unit, selectionViewModel: SelectionViewModel = viewModel()) {
-    val campaignPresent = selectionViewModel.campaignId
-    val oneShotPresent = selectionViewModel.oneShotId
-    var label = ""
+fun SelectionScreen(back: () -> Unit, selectionViewModel: SelectionViewModel = viewModel()) {
+    val campaign by selectionViewModel.campaign.observeAsState()
+    val oneShot by selectionViewModel.oneShot.observeAsState()
 
-    if (campaignPresent != null){
-        label = campaign?.title.toString()
-    } else if (oneShotPresent != null){
-        label = oneShot?.shotTitle.toString()
+    val label = if(campaign == null){
+        oneShot?.shotTitle.toString()
+    } else if (oneShot == null){
+        campaign?.title.toString()
+    } else {
+        "Error"
     }
 
 
@@ -69,13 +70,6 @@ fun SelectionScreen(campaign: Campaign?, oneShot: OneShot?, back: () -> Unit, se
 @Composable
 fun SelectionPreview() {
     DNDToolsTheme {
-        SelectionScreen(
-            campaign = Campaign(
-                id = 1,
-                title = "Misfits of Fire and Dice",
-                arrayOf("Fiona", "Cip"),
-                arrayOf("Myra", "Pipin"),
-                "Sword's Coast"
-            ), oneShot = null, {})
+        SelectionScreen({})
     }
 }

@@ -54,6 +54,7 @@ android {
 
 dependencies {
 
+    implementation ("androidx.compose.runtime:runtime-livedata:1.5.4")
     implementation ("org.jetbrains.kotlin:kotlin-stdlib:1.9.21")
     implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
     implementation("androidx.room:room-ktx:2.6.1")
