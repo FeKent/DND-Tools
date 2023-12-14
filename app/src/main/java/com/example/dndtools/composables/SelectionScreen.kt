@@ -20,17 +20,30 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.dndtools.data.Campaign
 import com.example.dndtools.data.OneShot
 import com.example.dndtools.ui.theme.DNDToolsTheme
+import com.example.dndtools.viewmodels.SelectionViewModel
 
 @Composable
-fun SelectionScreen(campaign: Campaign?, oneShot: OneShot?, back: () -> Unit) {
+fun SelectionScreen(campaign: Campaign?, oneShot: OneShot?, back: () -> Unit, selectionViewModel: SelectionViewModel = viewModel()) {
+    val campaignPresent = selectionViewModel.campaignId
+    val oneShotPresent = selectionViewModel.oneShotId
+    var label = ""
+
+    if (campaignPresent != null){
+        label = campaign?.title.toString()
+    } else if (oneShotPresent != null){
+        label = oneShot?.shotTitle.toString()
+    }
+
+
     Column(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
         CenterAlignedTopAppBar(
             title = {
                 Text(
-                    text = campaign?.title ?: oneShot?.shotTitle ?: "Default Title",
+                    text = label,
                     fontWeight = FontWeight.ExtraBold,
                     color = MaterialTheme.colorScheme.secondary
                 )
@@ -50,7 +63,6 @@ fun SelectionScreen(campaign: Campaign?, oneShot: OneShot?, back: () -> Unit) {
             }
         )
     }
-
 }
 
 @Preview(showSystemUi = true)
@@ -64,7 +76,6 @@ fun SelectionPreview() {
                 arrayOf("Fiona", "Cip"),
                 arrayOf("Myra", "Pipin"),
                 "Sword's Coast"
-            ), oneShot = null
-        ){}
+            ), oneShot = null, {})
     }
 }

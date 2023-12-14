@@ -53,8 +53,8 @@ fun IntroScreen(
     oneShots: List<OneShot>,
     introViewModel: IntroViewModel = viewModel(),
     addScreen: (Any?) -> Unit,
-    onCampaignTap: (Campaign) -> Unit,
-    onShotTap: (OneShot) -> Unit
+    onCampaignTap: (Any?) -> Unit,
+    onShotTap: (Any?) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     var selectedAdventureType by remember { mutableStateOf<String?>(null) }
@@ -201,10 +201,18 @@ fun IntroScreen(
             if (selectedAdventureType?.contains("One-Shots") == true) {
                 oneShots.forEach { item -> OneShotRow(oneShot = item, onShotTap = onShotTap) }
             } else if (selectedAdventureType?.contains("Campaign") == true) {
-                campaigns.forEach { item -> CampaignRow(campaign = item, onCampaignTap =  onCampaignTap ) }
+                campaigns.forEach { item -> CampaignRow(campaign = item, onCampaignTap = {
+                    onCampaignTap {
+                        introViewModel.campaignId = item.id
+                    }
+                } ) }
             } else {
                 oneShots.forEach { item -> OneShotRow(oneShot = item, onShotTap = onShotTap) }
-                campaigns.forEach { item -> CampaignRow(campaign = item, onCampaignTap =  onCampaignTap ) }
+                campaigns.forEach { item -> CampaignRow(campaign = item, onCampaignTap = {
+                    onCampaignTap {
+                        introViewModel.campaignId = item.id
+                    }
+                } ) }
             }
             Divider(modifier = Modifier.padding(horizontal = 32.dp), color = MaterialTheme.colorScheme.onBackground)
         }
@@ -212,11 +220,11 @@ fun IntroScreen(
 }
 
 @Composable
-fun CampaignRow(campaign: Campaign, onCampaignTap: (Campaign) -> Unit) {
+fun CampaignRow(campaign: Campaign, onCampaignTap: () -> Unit) {
     Box(modifier = Modifier
         .padding(horizontal = 32.dp)
         .fillMaxWidth()
-        .clickable { onCampaignTap(campaign) }) {
+        .clickable { onCampaignTap() }) {
         Row(modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp)) {
             Spacer(modifier = Modifier.size(4.dp))
             Text(

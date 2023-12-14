@@ -3,10 +3,7 @@ package com.example.dndtools
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -17,10 +14,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -57,7 +52,7 @@ class MainActivity : ComponentActivity() {
 sealed class Screen(val route: String) {
     object Intro : Screen("intro")
     object Add : Screen("add/{results}")
-    object Selection : Screen("selection/{oneShotId?}/{campaignId?}")
+    object Selection : Screen("selection/{oneShotId?}/{campaignId}")
 }
 
 @Composable
@@ -82,8 +77,8 @@ fun DndToolsApp() {
             IntroScreen(
                 campaigns = campaigns,
                 oneShots = oneshots,
-                onShotTap = { oneShot -> navController.navigate("selection/${oneShot.id}") },
-                onCampaignTap = { campaign -> navController.navigate("selection/${campaign.id}") },
+                onShotTap = { oneShotId -> navController.navigate("selection/${oneShotId}") },
+                onCampaignTap = { campaignId -> navController.navigate("selection/${campaignId}") },
                 addScreen = { results -> navController.navigate("add/$results") })
         }
         composable(Screen.Add.route) {
@@ -103,59 +98,39 @@ fun DndToolsApp() {
                 },
                 back = { navController.navigate("intro") })
         }
-        composable(Screen.Selection.route, arguments = listOf(
-            navArgument("oneShotId") { type = NavType.IntType },
-            navArgument("campaignId") { type = NavType.IntType }
-        )) { backStackEntry ->
-            val arguments = backStackEntry.arguments
-            val oneShotId = arguments?.getInt("oneShotId")
-            val campaignId = arguments?.getInt("campaignId")
+        composable(
+            Screen.Selection.route,
+            arguments = listOf(navArgument("oneShotId") { type = NavType.IntType },
+                navArgument("campaignId") { type = NavType.IntType })
+        ) { navBackStackEntry ->
+            val oneShotId = navBackStackEntry.arguments?.getInt("oneShotId")
+            val campaignId = navBackStackEntry.arguments?.getInt("campaignId")
 
-            if(oneShotId != null){
-                var oneShot: OneShot? by remember {mutableStateOf(null)}
+            var campaign: Campaign? by remember { mutableStateOf(null) }
+            var oneShot: OneShot?  by remember { mutableStateOf(null) }
 
-                LaunchedEffect(key1 = Unit){
+            LaunchedEffect(Unit) {
+                if (campaignId != null) {
+                    campaign = database.campaignDao().getCampaignById(campaignId)
+                } else if (oneShotId != null) {
                     oneShot = database.oneShotDao().getOneShotById(oneShotId)
                 }
-
-                oneShot?.let { SelectionScreen(
-                    campaign = null,
-                    oneShot = it,
-                    back = { navController.navigate("add") }
-                ) }?: run {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize(), contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(150.dp),
-                            strokeWidth = 8.dp
-                        )
-                    }
-                }
-            } else if (campaignId != null) {
-                var campaign: Campaign? by remember {mutableStateOf(null)}
-
-                LaunchedEffect(key1 = Unit){
-                    campaign = database.campaignDao().getCampaignById(campaignId)
-                }
-
-                campaign?.let { SelectionScreen(
-                    campaign = it,
-                    oneShot = null,
-                    back = { navController.navigate("add") }
-                ) }?: run {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize(), contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(150.dp),
-                            strokeWidth = 8.dp
-                        )
-                    }
-                }
             }
+
+            campaign?.let{
+                SelectionScreen(
+                    campaign = campaign,
+                    oneShot = null,
+                    back = { navController.navigate("intro") })
+            } ?: run {
+                SelectionScreen(
+                    campaign = null,
+                    oneShot = oneShot,
+                    back = { navController.navigate("intro") })
+            }
+
+
         }
+
     }
 }
