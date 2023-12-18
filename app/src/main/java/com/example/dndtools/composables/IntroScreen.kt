@@ -36,12 +36,11 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.dndtools.data.AdventureType
 import com.example.dndtools.data.Campaign
 import com.example.dndtools.data.OneShot
-import com.example.dndtools.ui.theme.DNDToolsTheme
 import com.example.dndtools.ui.theme.cambridge
 import com.example.dndtools.ui.theme.light1
 import com.example.dndtools.viewmodels.IntroViewModel
@@ -53,8 +52,8 @@ fun IntroScreen(
     oneShots: List<OneShot>,
     introViewModel: IntroViewModel = viewModel(),
     addScreen: (Any?) -> Unit,
-    onCampaignTap: (Campaign?) -> Unit,
-    onShotTap: (OneShot?) -> Unit
+    onCampaignTap: (Campaign?, AdventureType) -> Unit,
+    onShotTap: (OneShot?, AdventureType) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     var selectedAdventureType by remember { mutableStateOf<String?>(null) }
@@ -203,14 +202,14 @@ fun IntroScreen(
             } else if (selectedAdventureType?.contains("Campaign") == true) {
                 campaigns.forEach { item ->
                     CampaignRow(
-                        campaign = item, onCampaignTap = onCampaignTap
+                        campaign = item, onCampaignTap = onCampaignTap,
                     )
                 }
             } else {
                 oneShots.forEach { item -> OneShotRow(oneShot = item, onShotTap = onShotTap) }
                 campaigns.forEach { item ->
                     CampaignRow(
-                        campaign = item, onCampaignTap = onCampaignTap
+                        campaign = item, onCampaignTap = onCampaignTap,
                     )
                 }
             }
@@ -223,11 +222,11 @@ fun IntroScreen(
 }
 
 @Composable
-fun CampaignRow(campaign: Campaign, onCampaignTap: (Campaign) -> Unit) {
+fun CampaignRow(campaign: Campaign, onCampaignTap: (Campaign, AdventureType) -> Unit, ) {
     Box(modifier = Modifier
         .padding(horizontal = 32.dp)
         .fillMaxWidth()
-        .clickable { onCampaignTap(campaign) }) {
+        .clickable { onCampaignTap(campaign, AdventureType.Campaign)}) {
         Row(modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp)) {
             Spacer(modifier = Modifier.size(4.dp))
             Text(
@@ -254,11 +253,11 @@ fun CampaignRow(campaign: Campaign, onCampaignTap: (Campaign) -> Unit) {
 }
 
 @Composable
-fun OneShotRow(oneShot: OneShot, onShotTap: (OneShot) -> Unit) {
+fun OneShotRow(oneShot: OneShot, onShotTap: (OneShot, AdventureType) -> Unit) {
     Box(modifier = Modifier
         .padding(horizontal = 32.dp)
         .fillMaxWidth()
-        .clickable { onShotTap(oneShot) }
+        .clickable { onShotTap(oneShot, AdventureType.OneShot) }
     ) {
         Row(modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp)) {
             Spacer(modifier = Modifier.size(4.dp))
@@ -285,38 +284,38 @@ fun OneShotRow(oneShot: OneShot, onShotTap: (OneShot) -> Unit) {
     }
 }
 
-@Preview(showSystemUi = true/*, uiMode = UI_MODE_NIGHT_YES*/)
-@Composable
-fun InitialPreview() {
-    val exampleCamps = listOf(
-        Campaign(
-            id = 1,
-            title = "Misfits of Fire and Dice",
-            players = arrayOf("Fiona", "Cip"),
-            characters = arrayOf("Myra", "Pipin"),
-            setting = "Sword's Coast"
-        ), Campaign(
-            id = 1,
-            title = "Once and Again",
-            players = arrayOf("Snippy", "Elise", "Alex", "Sam"),
-            characters = arrayOf("Kitt", "Milee", "Gallifrey", "Wyrm"),
-            setting = "Verulien"
-        )
-    )
-    val exampleOneShot = listOf(
-        OneShot(
-            id = 1,
-            shotTitle = "Moon Over Graymoor",
-            shotPlayers = 3,
-            shotSetting = "Sword's Coast"
-        )
-    )
-    DNDToolsTheme {
-        IntroScreen(
-            campaigns = exampleCamps,
-            oneShots = exampleOneShot,
-            onCampaignTap = {},
-            onShotTap = {},
-            addScreen = {})
-    }
-}
+//@Preview(showSystemUi = true/*, uiMode = UI_MODE_NIGHT_YES*/)
+//@Composable
+//fun InitialPreview() {
+//    val exampleCamps = listOf(
+//        Campaign(
+//            id = 1,
+//            title = "Misfits of Fire and Dice",
+//            players = arrayOf("Fiona", "Cip"),
+//            characters = arrayOf("Myra", "Pipin"),
+//            setting = "Sword's Coast"
+//        ), Campaign(
+//            id = 1,
+//            title = "Once and Again",
+//            players = arrayOf("Snippy", "Elise", "Alex", "Sam"),
+//            characters = arrayOf("Kitt", "Milee", "Gallifrey", "Wyrm"),
+//            setting = "Verulien"
+//        )
+//    )
+//    val exampleOneShot = listOf(
+//        OneShot(
+//            id = 1,
+//            shotTitle = "Moon Over Graymoor",
+//            shotPlayers = 3,
+//            shotSetting = "Sword's Coast"
+//        )
+//    )
+//    DNDToolsTheme {
+//        IntroScreen(
+//            campaigns = exampleCamps,
+//            oneShots = exampleOneShot,
+//            onCampaignTap = {},
+//            onShotTap = {},
+//            addScreen = {})
+//    }
+//}

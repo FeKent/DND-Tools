@@ -7,10 +7,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
@@ -20,6 +23,8 @@ import androidx.room.Room
 import com.example.dndtools.composables.AddScreen
 import com.example.dndtools.composables.IntroScreen
 import com.example.dndtools.composables.SelectionScreen
+import com.example.dndtools.data.Adventure
+import com.example.dndtools.data.AdventureType
 import com.example.dndtools.data.DndToolsDatabase
 import com.example.dndtools.ui.theme.DNDToolsTheme
 import kotlinx.coroutines.launch
@@ -45,7 +50,7 @@ class MainActivity : ComponentActivity() {
 sealed class Screen(val route: String) {
     object Intro : Screen("intro")
     object Add : Screen("add/{results}")
-    object Selection : Screen("selection/{oneShotId?}/{campaignId}")
+    object Selection : Screen("selection/{adventureType}/{id}")
 }
 
 @Composable
@@ -60,7 +65,6 @@ fun DndToolsApp() {
     }
     val navController = rememberNavController()
 
-
     NavHost(navController = navController, startDestination = Screen.Intro.route) {
         composable(Screen.Intro.route) {
             val campaigns by database.campaignDao().allCampaigns()
@@ -70,11 +74,11 @@ fun DndToolsApp() {
             IntroScreen(
                 campaigns = campaigns,
                 oneShots = oneshots,
-                onShotTap = { oneShot ->
-                    navController.navigate(Screen.Selection.route + "?oneShotId=${oneShot?.id}")
+                onShotTap = { oneShot, adventureType ->
+                    navController.navigate("selection/$adventureType/${oneShot?.id}")
                 },
-                onCampaignTap = { campaign ->
-                    navController.navigate(Screen.Selection.route + "?campaignId=${campaign?.id}")
+                onCampaignTap = { campaign, adventureType ->
+                    navController.navigate("selection/$adventureType/${campaign?.id}")
                 },
                 addScreen = { results ->
                     navController.navigate(Screen.Add.route + "/$results")
@@ -99,10 +103,24 @@ fun DndToolsApp() {
                 back = { navController.navigate("intro") })
         }
         composable(Screen.Selection.route) { navBackStackEntry ->
-            val oneShotId = navBackStackEntry.arguments?.getString("oneShotId")?.toIntOrNull()
-            val campaignId = navBackStackEntry.arguments?.getString("campaignId")?.toIntOrNull()
+            val id = navBackStackEntry.arguments?.getString("id")?.toIntOrNull()
+            val adventureType = navBackStackEntry.arguments?.getString("adventureType")?.let {
+                AdventureType.valueOf(it)
+            } ?: AdventureType.Campaign // Default to Campaign if adventureType is null
 
-            SelectionScreen(back = {navController.navigate("intro")}, oneShotId = oneShotId, campaignId = campaignId)
+            var selectedAdventure by remember { mutableStateOf<Adventure?>(null) }
+
+            LaunchedEffect(id, adventureType) {
+                if (id != null) {
+                    selectedAdventure = if (adventureType == AdventureType.Campaign) {
+                        database.campaignDao().getCampaignById(id)
+                    } else {
+                        database.oneShotDao().getOneShotById(id)
+                    }
+                }
+            }
+
+            SelectionScreen(back = { navController.navigate("intro") }, adventure = selectedAdventure)
         }
     }
 }

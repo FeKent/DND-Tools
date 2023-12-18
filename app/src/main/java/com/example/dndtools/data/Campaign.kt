@@ -9,8 +9,8 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Campaign(
     @PrimaryKey (autoGenerate = true) val id: Int = 0,
-    val title: String,
+    override val title: String,
     val players: Array<String>,
     val characters: Array<String>,
     val setting: String,
-) : Parcelable
+) : Parcelable, Adventure

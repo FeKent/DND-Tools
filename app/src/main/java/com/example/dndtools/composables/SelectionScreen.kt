@@ -15,47 +15,21 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.dndtools.data.Adventure
 import com.example.dndtools.ui.theme.DNDToolsTheme
-import com.example.dndtools.viewmodels.SelectionViewModel
 
 @Composable
-fun SelectionScreen(back: () -> Unit, oneShotId: Int?, campaignId: Int?) {
-    val selectionViewModel: SelectionViewModel = viewModel()
-    selectionViewModel.fetchInitialData()
-
-    LaunchedEffect(key1 = oneShotId, key2 = campaignId) {
-        if (oneShotId != null) {
-            selectionViewModel.fetchOneShotById(oneShotId)
-        } else if (campaignId != null) {
-            selectionViewModel.fetchCampaignById(campaignId)
-        }
-    }
-
-    val campaign by selectionViewModel.campaign.observeAsState()
-    val oneShot by selectionViewModel.oneShot.observeAsState()
-
-    val label = if (campaign == null) {
-        oneShot?.shotTitle.toString()
-    } else if (oneShot == null) {
-        campaign?.title.toString()
-    } else {
-        "Error"
-    }
-
+fun SelectionScreen(back: () -> Unit, adventure: Adventure?) {
     Column(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
         CenterAlignedTopAppBar(
             title = {
                 Text(
-                    text = label,
+                    text = adventure?.title.toString(),
                     fontWeight = FontWeight.ExtraBold,
                     color = MaterialTheme.colorScheme.secondary
                 )
