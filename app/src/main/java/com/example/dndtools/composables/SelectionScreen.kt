@@ -83,7 +83,7 @@ fun SelectionScreen(back: () -> Unit, adventure: Adventure?) {
             color = light1, fontSize = 20.sp, modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.size(4.dp))
-        Divider(modifier = Modifier.padding(horizontal = 100.dp))
+        Divider(modifier = Modifier.padding(horizontal = 100.dp), color = light1)
         Spacer(modifier = Modifier.size(16.dp))
         Box(modifier = Modifier.align(Alignment.CenterHorizontally)) {
             Column {
