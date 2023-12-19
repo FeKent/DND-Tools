@@ -16,4 +16,7 @@ data class OneShot(
 ) : Parcelable, Adventure {
     override val title: String
         get() = shotTitle
+
+    override val numPlayers: Int
+        get() = shotPlayers
 }

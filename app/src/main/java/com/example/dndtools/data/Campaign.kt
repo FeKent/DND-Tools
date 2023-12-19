@@ -13,4 +13,7 @@ data class Campaign(
     val players: Array<String>,
     val characters: Array<String>,
     val setting: String,
-) : Parcelable, Adventure
+) : Parcelable, Adventure {
+    override val numPlayers: Int
+        get() = players.size
+}
