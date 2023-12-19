@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -36,11 +37,13 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.dndtools.data.AdventureType
 import com.example.dndtools.data.Campaign
 import com.example.dndtools.data.OneShot
+import com.example.dndtools.ui.theme.DNDToolsTheme
 import com.example.dndtools.ui.theme.cambridge
 import com.example.dndtools.ui.theme.light1
 import com.example.dndtools.viewmodels.IntroViewModel
@@ -58,7 +61,7 @@ fun IntroScreen(
     var expanded by remember { mutableStateOf(false) }
     var selectedAdventureType by remember { mutableStateOf<String?>(null) }
 
-    Column(modifier = Modifier.background(color = MaterialTheme.colorScheme.background)) {
+    Column(modifier = Modifier.fillMaxSize().background(color = MaterialTheme.colorScheme.background)) {
         CenterAlignedTopAppBar(
             title = {
                 Text(
@@ -222,7 +225,7 @@ fun IntroScreen(
 }
 
 @Composable
-fun CampaignRow(campaign: Campaign, onCampaignTap: (Campaign, AdventureType) -> Unit, ) {
+fun CampaignRow(campaign: Campaign, onCampaignTap: (Campaign, AdventureType) -> Unit) {
     Box(modifier = Modifier
         .padding(horizontal = 32.dp)
         .fillMaxWidth()
@@ -284,38 +287,39 @@ fun OneShotRow(oneShot: OneShot, onShotTap: (OneShot, AdventureType) -> Unit) {
     }
 }
 
-//@Preview(showSystemUi = true/*, uiMode = UI_MODE_NIGHT_YES*/)
-//@Composable
-//fun InitialPreview() {
-//    val exampleCamps = listOf(
-//        Campaign(
-//            id = 1,
-//            title = "Misfits of Fire and Dice",
-//            players = arrayOf("Fiona", "Cip"),
-//            characters = arrayOf("Myra", "Pipin"),
-//            setting = "Sword's Coast"
-//        ), Campaign(
-//            id = 1,
-//            title = "Once and Again",
-//            players = arrayOf("Snippy", "Elise", "Alex", "Sam"),
-//            characters = arrayOf("Kitt", "Milee", "Gallifrey", "Wyrm"),
-//            setting = "Verulien"
-//        )
-//    )
-//    val exampleOneShot = listOf(
-//        OneShot(
-//            id = 1,
-//            shotTitle = "Moon Over Graymoor",
-//            shotPlayers = 3,
-//            shotSetting = "Sword's Coast"
-//        )
-//    )
-//    DNDToolsTheme {
-//        IntroScreen(
-//            campaigns = exampleCamps,
-//            oneShots = exampleOneShot,
-//            onCampaignTap = {},
-//            onShotTap = {},
-//            addScreen = {})
-//    }
-//}
+@Preview(showSystemUi = true/*, uiMode = UI_MODE_NIGHT_YES*/)
+@Composable
+fun InitialPreview() {
+    val exampleCamps = listOf(
+        Campaign(
+            id = 1,
+            title = "Misfits of Fire and Dice",
+            players = arrayOf("Fiona", "Cip"),
+            characters = arrayOf("Myra", "Pipin"),
+            setting = "Sword's Coast"
+        ), Campaign(
+            id = 1,
+            title = "Once and Again",
+            players = arrayOf("Snippy", "Elise", "Alex", "Sam"),
+            characters = arrayOf("Kitt", "Milee", "Gallifrey", "Wyrm"),
+            setting = "Verulien"
+        )
+    )
+    val exampleOneShot = listOf(
+        OneShot(
+            id = 1,
+            shotTitle = "Moon Over Graymoor",
+            shotPlayers = 3,
+            shotSetting = "Sword's Coast"
+        )
+    )
+    DNDToolsTheme {
+        IntroScreen(
+            campaigns = exampleCamps,
+            oneShots = exampleOneShot,
+            addScreen = {},
+            onCampaignTap = { _, _ -> },
+            onShotTap = { _, _ -> }
+        )
+    }
+}
