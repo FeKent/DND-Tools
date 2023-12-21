@@ -21,6 +21,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.example.dndtools.composables.AddScreen
+import com.example.dndtools.composables.InitiativeScreen
 import com.example.dndtools.composables.IntroScreen
 import com.example.dndtools.composables.SelectionScreen
 import com.example.dndtools.data.Adventure
@@ -51,6 +52,7 @@ sealed class Screen(val route: String) {
     object Intro : Screen("intro")
     object Add : Screen("add/{results}")
     object Selection : Screen("selection/{adventureType}/{id}")
+    object Initiative : Screen("initiative")
 }
 
 @Composable
@@ -120,7 +122,8 @@ fun DndToolsApp() {
                 }
             }
 
-            SelectionScreen(back = { navController.navigate("intro") }, adventure = selectedAdventure)
+            SelectionScreen(back = { navController.navigate("intro") }, adventure = selectedAdventure, initiativeScreen = {navController.navigate("initiative")})
         }
+        composable(Screen.Initiative.route) { InitiativeScreen (back = {navController.popBackStack()})}
     }
 }

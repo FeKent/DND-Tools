@@ -46,7 +46,7 @@ import com.example.dndtools.ui.theme.DNDToolsTheme
 import com.example.dndtools.ui.theme.light1
 
 @Composable
-fun SelectionScreen(back: () -> Unit, adventure: Adventure?) {
+fun SelectionScreen(back: () -> Unit, adventure: Adventure?, initiativeScreen: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -93,7 +93,10 @@ fun SelectionScreen(back: () -> Unit, adventure: Adventure?) {
                     Spacer(modifier = Modifier.size(24.dp))
                     IconWithCaption(Icons.Filled.DateRange, "Schedule Sessions", onClick = {})
                     Spacer(modifier = Modifier.size(24.dp))
-                    IconWithCaption(Icons.Filled.Warning, "Initiative Tracker", onClick = {})
+                    IconWithCaption(
+                        Icons.Filled.Warning,
+                        "Initiative Tracker",
+                        onClick = { initiativeScreen() })
                 }
                 Spacer(modifier = Modifier.size(24.dp))
                 Row(horizontalArrangement = Arrangement.SpaceBetween) {
@@ -143,6 +146,6 @@ fun IconWithCaption(
 @Composable
 fun SelectionPreview() {
     DNDToolsTheme {
-        SelectionScreen(back = {}, adventure = OneShot(1, "Misfits", 3, "Sword's Coast"))
+        SelectionScreen(back = {}, adventure = OneShot(1, "Misfits", 3, "Sword's Coast"), {})
     }
 }
