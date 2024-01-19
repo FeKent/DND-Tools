@@ -80,7 +80,7 @@ fun DndToolsApp() {
                     navController.navigate("selection/${campaign.id}")
                 },
                 addScreen = { results ->
-                    navController.navigate(Screen.Add.route + "/$results")
+                    navController.navigate("add/$results")
                 }
             )
         }
