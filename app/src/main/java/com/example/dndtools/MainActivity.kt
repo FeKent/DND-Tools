@@ -25,7 +25,6 @@ import com.example.dndtools.composables.InitiativeScreen
 import com.example.dndtools.composables.IntroScreen
 import com.example.dndtools.composables.SelectionScreen
 import com.example.dndtools.data.Adventure
-import com.example.dndtools.data.AdventureType
 import com.example.dndtools.data.DndToolsDatabase
 import com.example.dndtools.ui.theme.DNDToolsTheme
 import kotlinx.coroutines.launch
@@ -36,7 +35,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             DNDToolsTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -102,22 +100,12 @@ fun DndToolsApp() {
                 back = { navController.navigate("intro") })
         }
         composable(Screen.Selection.route) { navBackStackEntry ->
-            val id = navBackStackEntry.arguments?.getString("id")?.toIntOrNull()
-            val adventureType = navBackStackEntry.arguments?.getString("adventureType")?.let {
-                AdventureType.valueOf(it)
-            } ?: AdventureType.Campaign // Default to Campaign if adventureType is null
-
+            val id = navBackStackEntry.arguments!!.getString("id")!!.toInt()
             var selectedAdventure by remember { mutableStateOf<Adventure?>(null) }
 
-            LaunchedEffect(id, adventureType) {
-                if (id != null) {
-                    selectedAdventure = if (adventureType == AdventureType.Campaign) {
-                        database.adventureDao().getAdventureById(id)
-                    } else {
-                        database.adventureDao().getAdventureById(id)
-                    }
+            LaunchedEffect(id) {
+                selectedAdventure = database.adventureDao().getAdventureById(id)
                 }
-            }
 
             SelectionScreen(back = { navController.navigate("intro") }, adventure = selectedAdventure, initiativeScreen = {navController.navigate("initiative")})
         }
