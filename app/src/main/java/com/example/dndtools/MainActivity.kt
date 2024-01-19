@@ -51,7 +51,7 @@ class MainActivity : ComponentActivity() {
 sealed class Screen(val route: String) {
     object Intro : Screen("intro")
     object Add : Screen("add/{results}")
-    object Selection : Screen("selection/{adventureType}/{id}")
+    object Selection : Screen("selection/{id}")
     object Initiative : Screen("initiative")
 }
 
@@ -69,18 +69,15 @@ fun DndToolsApp() {
 
     NavHost(navController = navController, startDestination = Screen.Intro.route) {
         composable(Screen.Intro.route) {
-            val campaigns by database.campaignDao().allCampaigns()
-                .collectAsState(initial = emptyList())
-            val oneshots by database.oneShotDao().allOneShots()
+            val adventures by database.adventureDao().allAdventures()
                 .collectAsState(initial = emptyList())
             IntroScreen(
-                campaigns = campaigns,
-                oneShots = oneshots,
-                onShotTap = { oneShot, adventureType ->
-                    navController.navigate("selection/$adventureType/${oneShot?.id}")
+                adventures = adventures,
+                onShotTap = { oneShot ->
+                    navController.navigate("selection/${oneShot.id}")
                 },
-                onCampaignTap = { campaign, adventureType ->
-                    navController.navigate("selection/$adventureType/${campaign?.id}")
+                onCampaignTap = { campaign ->
+                    navController.navigate("selection/${campaign.id}")
                 },
                 addScreen = { results ->
                     navController.navigate(Screen.Add.route + "/$results")
@@ -92,13 +89,13 @@ fun DndToolsApp() {
             AddScreen(
                 onCampaignEntered = { newCampaign ->
                     addScreenScope.launch {
-                        database.campaignDao().insertCampaign(newCampaign)
+                        database.adventureDao().insertAdventure(newCampaign)
                     }
                     navController.popBackStack()
                 },
                 onOneShotEntered = { newOneShot ->
                     addScreenScope.launch {
-                        database.oneShotDao().insertOneShot(newOneShot)
+                        database.adventureDao().insertAdventure(newOneShot)
                     }
                     navController.popBackStack()
                 },
@@ -115,9 +112,9 @@ fun DndToolsApp() {
             LaunchedEffect(id, adventureType) {
                 if (id != null) {
                     selectedAdventure = if (adventureType == AdventureType.Campaign) {
-                        database.campaignDao().getCampaignById(id)
+                        database.adventureDao().getAdventureById(id)
                     } else {
-                        database.oneShotDao().getOneShotById(id)
+                        database.adventureDao().getAdventureById(id)
                     }
                 }
             }

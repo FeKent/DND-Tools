@@ -41,7 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.dndtools.data.Adventure
-import com.example.dndtools.data.OneShot
+import com.example.dndtools.data.AdventureType
 import com.example.dndtools.ui.theme.DNDToolsTheme
 import com.example.dndtools.ui.theme.light1
 
@@ -146,6 +146,6 @@ fun IconWithCaption(
 @Composable
 fun SelectionPreview() {
     DNDToolsTheme {
-        SelectionScreen(back = {}, adventure = OneShot(1, "Misfits", 3, "Sword's Coast"), {})
+        SelectionScreen(back = {}, adventure = Adventure(1, AdventureType.OneShot,"Misfits", 3, "Sword's Coast"), {})
     }
 }

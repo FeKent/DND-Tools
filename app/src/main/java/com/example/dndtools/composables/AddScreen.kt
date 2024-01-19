@@ -40,8 +40,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.dndtools.data.Campaign
-import com.example.dndtools.data.OneShot
+import com.example.dndtools.data.Adventure
+import com.example.dndtools.data.AdventureType
 import com.example.dndtools.ui.theme.DNDToolsTheme
 import com.example.dndtools.viewmodels.AddViewModel
 
@@ -50,20 +50,15 @@ import com.example.dndtools.viewmodels.AddViewModel
 @Composable
 fun AddScreen(
     addViewModel: AddViewModel = viewModel(),
-    onCampaignEntered: ((Campaign) -> Unit)? = null,
-    onOneShotEntered: ((OneShot) -> Unit)? = null,
+    onCampaignEntered: ((Adventure) -> Unit)? = null,
+    onOneShotEntered: ((Adventure) -> Unit)? = null,
     back: () -> Unit,
 ) {
     val results = addViewModel.results
 
     var title by remember { mutableStateOf("") }
     var players by remember { mutableStateOf("") }
-    var characters by remember { mutableStateOf("") }
     var setting by remember { mutableStateOf("") }
-
-    var shotTitle by remember { mutableStateOf("") }
-    var shotPlayers by remember { mutableStateOf("") }
-    var shotSetting by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -106,84 +101,65 @@ fun AddScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                if (results) {
-                    AddTextField(
-                        label = "Campaign Title",
-                        value = title,
-                        onValueChange = { title = it })
-                    Spacer(modifier = Modifier.size(8.dp))
-                    AddTextField(
-                        label = "Players",
-                        value = players,
-                        onValueChange = { players = it })
-                    Spacer(modifier = Modifier.size(8.dp))
-                    AddTextField(
-                        label = "Characters",
-                        value = characters,
-                        onValueChange = { characters = it })
-                    Spacer(modifier = Modifier.size(8.dp))
-                    AddTextField(
-                        label = "Setting",
-                        value = setting,
-                        onValueChange = { setting = it })
-                } else {
-                    AddTextField(
-                        label = "One-Shot Title",
-                        value = shotTitle,
-                        onValueChange = { shotTitle = it })
-                    Spacer(modifier = Modifier.size(8.dp))
-                    AddNumField(
-                        label = "Players",
-                        value = shotPlayers,
-                        onValueChange = { shotPlayers = it })
-                    Spacer(modifier = Modifier.size(8.dp))
-                    AddTextField(
-                        label = "Setting",
-                        value = shotSetting,
-                        onValueChange = { shotSetting = it })
-                }
-
-
-            }
+                AddTextField(
+                    label = if (results) {
+                        "Campaign Title"
+                    } else {
+                        "One-Shot Title"
+                    },
+                    value = title,
+                    onValueChange = { title = it })
+                Spacer(modifier = Modifier.size(8.dp))
+                AddNumField(
+                    label = "Players",
+                    value = players,
+                    onValueChange = { players = it })
+                Spacer(modifier = Modifier.size(8.dp))
+                AddTextField(
+                    label = "Setting",
+                    value = setting,
+                    onValueChange = { setting = it })
         }
-        Spacer(modifier = Modifier.size(32.dp))
-
-        if (results) {
-            IconButton(onClick = {
-                val newCampaign = Campaign(
-                    title = title,
-                    players = players.split(",").toTypedArray(),
-                    characters = characters.split(",").toTypedArray(),
-                    setting = setting
-                )
-                onCampaignEntered?.invoke(newCampaign)
-            }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                Icon(
-                    Icons.Filled.Add,
-                    "Add Campaign",
-                    tint = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier.size(80.dp)
-                )
-            }
-        } else {
-            IconButton(onClick = {
-                val newOneShot = OneShot(
-                    shotTitle = shotTitle,
-                    shotPlayers = shotPlayers.toInt(),
-                    shotSetting = shotSetting
-                )
-                onOneShotEntered?.invoke(newOneShot)
-            }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                Icon(
-                    Icons.Filled.Add,
-                    "Add One-Shot",
-                    tint = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier.size(80.dp)
-                )
-            }
-        }
-
     }
+    Spacer(modifier = Modifier.size(32.dp))
+
+    if (results) {
+        IconButton(onClick = {
+            val newCampaign = Adventure(
+                title = title,
+                players = players.toInt(),
+                setting = setting,
+                adventureType = AdventureType.Campaign
+            )
+            onCampaignEntered?.invoke(newCampaign)
+        }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
+            Icon(
+                Icons.Filled.Add,
+                "Add Campaign",
+                tint = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier.size(80.dp)
+            )
+        }
+    } else {
+        IconButton(onClick = {
+            val newOneShot = Adventure(
+                title = title,
+                players = players.toInt(),
+                setting = setting,
+                adventureType = AdventureType.OneShot
+            )
+            onOneShotEntered?.invoke(newOneShot)
+        }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
+            Icon(
+                Icons.Filled.Add,
+                "Add One-Shot",
+                tint = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier.size(80.dp)
+            )
+        }
+    }
+
+}
 }
 
 @Composable
