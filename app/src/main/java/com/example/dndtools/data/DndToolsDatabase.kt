@@ -2,12 +2,9 @@ package com.example.dndtools.data
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
 
-@Database(entities = [Campaign::class, OneShot::class], version = 1, exportSchema = false)
-@TypeConverters(Converters::class)
+@Database(entities = [Adventure::class], version = 1, exportSchema = false)
 abstract class DndToolsDatabase : RoomDatabase() {
-    abstract fun campaignDao() : CampaignDao
+    abstract fun adventureDao() : AdventureDao
 
-    abstract fun oneShotDao() : OneShotDao
 }
