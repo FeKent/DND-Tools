@@ -322,6 +322,12 @@ fun InitialPreview() {
             title = "Moon Over Graymoor",
             players = 3,
             setting = "Sword's Coast"
+        ), Adventure(
+            id = 1,
+            adventureType = AdventureType.OneShot,
+            title = "Death House",
+            players = 6,
+            setting = "Barovia"
         )
     )
     DNDToolsTheme {
