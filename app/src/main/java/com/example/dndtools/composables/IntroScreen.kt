@@ -202,14 +202,16 @@ fun IntroScreen(
                 .weight(1f),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            val sortedAdventures: List<Adventure> = adventures.sortedBy { it.title.removePrefix("The") }
+
             if (selectedAdventureType?.contains("One-Shots") == true) {
-                adventures.forEach { item ->
+                sortedAdventures.forEach { item ->
                     if (item.adventureType == AdventureType.OneShot) {
                         OneShotRow(adventure = item, onShotTap = onShotTap)
                     }
                 }
             } else if (selectedAdventureType?.contains("Campaign") == true) {
-                adventures.forEach { item ->
+                sortedAdventures.forEach { item ->
                     if (item.adventureType == AdventureType.Campaign) {
                         CampaignRow(
                             adventure = item, onCampaignTap = onCampaignTap,
@@ -217,7 +219,7 @@ fun IntroScreen(
                     }
                 }
             } else {
-                adventures.forEach { item ->
+                sortedAdventures.forEach { item ->
                     if (item.adventureType == AdventureType.OneShot) {
                         OneShotRow(adventure = item, onShotTap = onShotTap)
                     } else {
