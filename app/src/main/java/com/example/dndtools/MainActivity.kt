@@ -50,7 +50,7 @@ sealed class Screen(val route: String) {
     object Intro : Screen("intro")
     object Add : Screen("add/{results}")
     object Selection : Screen("selection/{id}")
-    object Initiative : Screen("initiative")
+    object Initiative : Screen("initiative/{id}")
 }
 
 @Composable
@@ -107,8 +107,16 @@ fun DndToolsApp() {
                 selectedAdventure = database.adventureDao().getAdventureById(id)
                 }
 
-            SelectionScreen(back = { navController.navigate("intro") }, adventure = selectedAdventure, initiativeScreen = {navController.navigate("initiative")})
+            SelectionScreen(back = { navController.navigate("intro") }, adventure = selectedAdventure, initiativeScreen = {navController.navigate("initiative/${selectedAdventure?.id}")})
         }
-        composable(Screen.Initiative.route) { InitiativeScreen (back = {navController.popBackStack()})}
+        composable(Screen.Initiative.route) { navBackStackEntry ->
+            val id = navBackStackEntry.arguments!!.getString("id")!!.toInt()
+            var selectedAdventure by remember { mutableStateOf<Adventure?>(null) }
+
+            LaunchedEffect(id) {
+                selectedAdventure = database.adventureDao().getAdventureById(id)
+            }
+
+            InitiativeScreen (adventure = selectedAdventure, back = {navController.popBackStack()})}
     }
 }
