@@ -102,12 +102,18 @@ fun DndToolsApp() {
         composable(Screen.Selection.route) { navBackStackEntry ->
             val id = navBackStackEntry.arguments!!.getString("id")!!.toInt()
             var selectedAdventure by remember { mutableStateOf<Adventure?>(null) }
+            val screenScope = rememberCoroutineScope()
 
             LaunchedEffect(id) {
                 selectedAdventure = database.adventureDao().getAdventureById(id)
-                }
+            }
 
-            SelectionScreen(back = { navController.navigate("intro") }, adventure = selectedAdventure, initiativeScreen = {navController.navigate("initiative/${selectedAdventure?.id}")})
+            SelectionScreen(
+                back = { navController.navigate("intro") },
+                adventure = selectedAdventure,
+                initiativeScreen = { navController.navigate("initiative/${selectedAdventure?.id}") },
+                delete = { adventure -> screenScope.launch { database.adventureDao().delete(adventure)}; navController.popBackStack()}
+            )
         }
         composable(Screen.Initiative.route) { navBackStackEntry ->
             val id = navBackStackEntry.arguments!!.getString("id")!!.toInt()
@@ -117,6 +123,7 @@ fun DndToolsApp() {
                 selectedAdventure = database.adventureDao().getAdventureById(id)
             }
 
-            InitiativeScreen (adventure = selectedAdventure, back = {navController.popBackStack()})}
+            InitiativeScreen(adventure = selectedAdventure, back = { navController.popBackStack() })
+        }
     }
 }
