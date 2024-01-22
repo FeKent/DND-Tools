@@ -100,7 +100,7 @@ fun EditScreen(adventure: Adventure, back: () -> Unit) {
                 ExposedDropdownMenuBox(expanded, onExpandedChange = { expanded = !expanded }) {
                     TextField(
                         modifier = Modifier.menuAnchor(),
-                        value = adventure.adventureType.name,
+                        value = adventureType,
                         onValueChange = {},
                         readOnly = true,
                         label = {
@@ -118,10 +118,18 @@ fun EditScreen(adventure: Adventure, back: () -> Unit) {
                     )
                     ExposedDropdownMenu(
                         expanded = expanded,
-                        onDismissRequest = { expanded = false }) {
+                        onDismissRequest = { expanded = false },
+                        modifier = Modifier.background(MaterialTheme.colorScheme.onPrimary)
+                    ) {
                         AdventureType.entries.forEach { option ->
                             DropdownMenuItem(
-                                text = { Text(text = option.name) },
+                                text = {
+                                    Text(
+                                        text = option.name,
+                                        color = MaterialTheme.colorScheme.primary,
+                                        fontWeight = FontWeight.Normal
+                                    )
+                                },
                                 onClick = { adventureType = option.name; expanded = false })
                         }
                     }
