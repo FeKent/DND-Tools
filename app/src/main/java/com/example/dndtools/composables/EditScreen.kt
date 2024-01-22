@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
 
 package com.example.dndtools.composables
 
@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenuItem
@@ -19,6 +20,7 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.ExposedDropdownMenuDefaults.TrailingIcon
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -40,8 +42,9 @@ import com.example.dndtools.data.AdventureType
 import com.example.dndtools.ui.theme.DNDToolsTheme
 
 @Composable
-fun EditScreen(adventure: Adventure, back: () -> Unit) {
+fun EditScreen(adventure: Adventure, back: () -> Unit, onEdit: (Adventure) -> Unit) {
 
+    val id = adventure.id
     var title by remember { mutableStateOf(adventure.title) }
     var adventureType by remember { mutableStateOf(adventure.adventureType.name) }
     var players by remember { mutableStateOf(adventure.players.toString()) }
@@ -117,9 +120,9 @@ fun EditScreen(adventure: Adventure, back: () -> Unit) {
                         )
                     )
                     ExposedDropdownMenu(
+                        modifier = Modifier.background(MaterialTheme.colorScheme.onPrimary),
                         expanded = expanded,
-                        onDismissRequest = { expanded = false },
-                        modifier = Modifier.background(MaterialTheme.colorScheme.onPrimary)
+                        onDismissRequest = { expanded = false }
                     ) {
                         AdventureType.entries.forEach { option ->
                             DropdownMenuItem(
@@ -133,6 +136,27 @@ fun EditScreen(adventure: Adventure, back: () -> Unit) {
                                 onClick = { adventureType = option.name; expanded = false })
                         }
                     }
+                }
+                Spacer(modifier = Modifier.size(32.dp))
+                IconButton(
+                    onClick = {
+                        val editedAdventure = Adventure(
+                            title = title,
+                            id = id,
+                            adventureType = if(adventureType.contains("OneShot")){AdventureType.OneShot} else AdventureType.Campaign,
+                            players = players.toInt(),
+                            setting = setting
+                        )
+                        onEdit.invoke(editedAdventure)
+                    },
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                ) {
+                    Icon(
+                        Icons.Filled.Add,
+                        "Save Edit",
+                        tint = MaterialTheme.colorScheme.onBackground,
+                        modifier = Modifier.size(80.dp)
+                    )
                 }
             }
         }
@@ -151,7 +175,7 @@ fun EditPreview() {
                 "Misfits",
                 3,
                 "Sword's Coast"
-            )
-        ) {}
+            ), {}, {}
+        )
     }
 }
