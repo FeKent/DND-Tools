@@ -21,6 +21,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.example.dndtools.composables.AddScreen
+import com.example.dndtools.composables.EditScreen
 import com.example.dndtools.composables.InitiativeScreen
 import com.example.dndtools.composables.IntroScreen
 import com.example.dndtools.composables.SelectionScreen
@@ -51,6 +52,7 @@ sealed class Screen(val route: String) {
     object Add : Screen("add/{results}")
     object Selection : Screen("selection/{id}")
     object Initiative : Screen("initiative/{id}")
+    object Edit : Screen("edit/{id}")
 }
 
 @Composable
@@ -112,7 +114,12 @@ fun DndToolsApp() {
                 back = { navController.navigate("intro") },
                 adventure = selectedAdventure,
                 initiativeScreen = { navController.navigate("initiative/${selectedAdventure?.id}") },
-                delete = { adventure -> screenScope.launch { database.adventureDao().delete(adventure)}; navController.popBackStack()}
+                delete = { adventure ->
+                    screenScope.launch {
+                        database.adventureDao().delete(adventure)
+                    }; navController.popBackStack()
+                },
+                edit = {adventure -> navController.navigate("edit/${adventure.id}") }
             )
         }
         composable(Screen.Initiative.route) { navBackStackEntry ->
@@ -124,6 +131,23 @@ fun DndToolsApp() {
             }
 
             InitiativeScreen(adventure = selectedAdventure, back = { navController.popBackStack() })
+        }
+        composable(Screen.Edit.route) { navBackStackEntry ->
+            val id = navBackStackEntry.arguments!!.getString("id")!!.toInt()
+            var selectedAdventure by remember { mutableStateOf<Adventure?>(null) }
+            LaunchedEffect(id) {
+                selectedAdventure = database.adventureDao().getAdventureById(id)
+            }
+            val editScreenScope = rememberCoroutineScope()
+
+            selectedAdventure?.let { editedAdventure ->
+                EditScreen(
+                    adventure = editedAdventure,
+                    back = { navController.popBackStack() },
+                    onEdit = { updatedAdventure ->
+                        editScreenScope.launch { database.adventureDao().editAdventure(updatedAdventure) ; navController.popBackStack() }
+                    })
+            }
         }
     }
 }

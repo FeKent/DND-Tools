@@ -46,7 +46,7 @@ import com.example.dndtools.ui.theme.DNDToolsTheme
 import com.example.dndtools.ui.theme.light1
 
 @Composable
-fun SelectionScreen(back: () -> Unit, adventure: Adventure?, initiativeScreen: () -> Unit, delete: (Adventure)-> Unit) {
+fun SelectionScreen(back: () -> Unit, adventure: Adventure?, initiativeScreen: () -> Unit, delete: (Adventure)-> Unit, edit: (Adventure)-> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -102,7 +102,7 @@ fun SelectionScreen(back: () -> Unit, adventure: Adventure?, initiativeScreen: (
                 Row(horizontalArrangement = Arrangement.SpaceBetween) {
                     IconWithCaption(Icons.Filled.AddCircle, "Add Notes", onClick = {})
                     Spacer(modifier = Modifier.size(24.dp))
-                    IconWithCaption(Icons.Filled.Create, "Edit Info", onClick = {})
+                    IconWithCaption(Icons.Filled.Create, "Edit Info", onClick = {edit(adventure!!)})
                     Spacer(modifier = Modifier.size(24.dp))
                     IconWithCaption(Icons.Filled.Delete, "Delete", onClick = {delete(adventure!!)})
                 }
@@ -146,6 +146,6 @@ fun IconWithCaption(
 @Composable
 fun SelectionPreview() {
     DNDToolsTheme {
-        SelectionScreen(back = {}, adventure = Adventure(1, AdventureType.OneShot,"Misfits", 3, "Sword's Coast"), {}, {})
+        SelectionScreen(back = {}, adventure = Adventure(1, AdventureType.OneShot,"Misfits", 3, "Sword's Coast"), {}, {}, {})
     }
 }
