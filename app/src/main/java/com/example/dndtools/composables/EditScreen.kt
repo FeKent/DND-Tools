@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
@@ -96,8 +97,9 @@ fun EditScreen(adventure: Adventure, back: () -> Unit) {
                     value = setting,
                     onValueChange = { setting = it })
                 Spacer(modifier = Modifier.size(8.dp))
-                ExposedDropdownMenuBox(expanded, onExpandedChange = { expanded = false }) {
+                ExposedDropdownMenuBox(expanded, onExpandedChange = { expanded = !expanded }) {
                     TextField(
+                        modifier = Modifier.menuAnchor(),
                         value = adventure.adventureType.name,
                         onValueChange = {},
                         readOnly = true,
@@ -113,8 +115,16 @@ fun EditScreen(adventure: Adventure, back: () -> Unit) {
                             unfocusedContainerColor = MaterialTheme.colorScheme.onPrimary,
                             disabledContainerColor = MaterialTheme.colorScheme.onPrimary,
                         )
-
                     )
+                    ExposedDropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }) {
+                        AdventureType.entries.forEach { option ->
+                            DropdownMenuItem(
+                                text = { Text(text = option.name) },
+                                onClick = { adventureType = option.name; expanded = false })
+                        }
+                    }
                 }
             }
         }
