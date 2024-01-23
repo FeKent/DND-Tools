@@ -40,6 +40,12 @@ import com.example.dndtools.data.AdventureType
 import com.example.dndtools.ui.theme.DNDToolsTheme
 import com.example.dndtools.viewmodels.InitiativeViewModel
 
+enum class ScreenState {
+    Input,
+    Output
+}
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InitiativeScreen(
@@ -47,14 +53,15 @@ fun InitiativeScreen(
     adventure: Adventure?,
     initiativeViewModel: InitiativeViewModel = viewModel()
 ) {
+    var currentState by remember { mutableStateOf(ScreenState.Input) }
+    val state = initiativeViewModel.enemies
+    var enemies by remember { mutableStateOf(state?.toString() ?: "") }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        val state = initiativeViewModel.enemies
-        var enemies by remember { mutableStateOf(state?.toString() ?: "") }
-
         CenterAlignedTopAppBar(
             title = {
                 Text(
@@ -79,49 +86,67 @@ fun InitiativeScreen(
             }
         )
         Spacer(modifier = Modifier.size(54.dp))
-        Box {
-            Column {
+        when (currentState) {
+            ScreenState.Input -> {
+                Box {
+                    Column {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            AddNumField(
+                                label = "Number of Enemies",
+                                value = enemies,
+                                onValueChange = { enemies = it; enemies.toInt() })
+                        }
+                        Spacer(modifier = Modifier.size(54.dp))
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .verticalScroll(rememberScrollState())
+                        ) {
+                            Text(
+                                text = "Character Rolls", fontWeight = FontWeight.ExtraBold,
+                                color = MaterialTheme.colorScheme.onBackground, fontSize = 24.sp
+                            )
+                            Spacer(modifier = Modifier.size(16.dp))
+                            for (i in 1..(adventure?.players ?: 0)) {
+                                PlayerRoll(players = i)
+                                Spacer(modifier = Modifier.size(16.dp))
+                            }
+                            Spacer(modifier = Modifier.size(54.dp))
+                            TextButton(
+                                onClick = { currentState = ScreenState.Output },
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = MaterialTheme.colorScheme.primary,
+                                    contentColor = MaterialTheme.colorScheme.onBackground
+                                ),
+                                contentPadding = PaddingValues(16.dp)
+                            ) {
+                                Text(text = "Next", fontSize = 35.sp)
+                            }
+                        }
+                    }
+                }
+            }
+            ScreenState.Output -> {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    AddNumField(
-                        label = "Number of Enemies",
-                        value = enemies,
-                        onValueChange = { enemies = it ; enemies.toInt() })
-                }
-                Spacer(modifier = Modifier.size(54.dp))
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .verticalScroll(rememberScrollState())
-                ) {
                     Text(
-                        text = "Character Rolls", fontWeight = FontWeight.ExtraBold,
-                        color = MaterialTheme.colorScheme.onBackground, fontSize = 24.sp
+                        text = "Round: 1",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onBackground
                     )
-                    Spacer(modifier = Modifier.size(16.dp))
-                    for (i in 1..(adventure?.players ?: 0)) {
-                        PlayerRoll(players = i)
-                        Spacer(modifier = Modifier.size(16.dp))
-                    }
-                    Spacer(modifier = Modifier.size(54.dp))
-                    TextButton(
-                        onClick = { /*TODO*/ },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor = MaterialTheme.colorScheme.onBackground
-                        ),
-                        contentPadding = PaddingValues(16.dp)
-                    ) {
-                        Text(text = "Next", fontSize = 35.sp)
-                    }
                 }
             }
         }
     }
 }
+
 
 @Composable
 fun PlayerRoll(players: Int) {
