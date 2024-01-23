@@ -57,6 +57,7 @@ fun InitiativeScreen(
     val state = initiativeViewModel.enemies
     var enemies by remember { mutableStateOf(state?.toString() ?: "") }
 
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -130,6 +131,7 @@ fun InitiativeScreen(
                     }
                 }
             }
+
             ScreenState.Output -> {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -141,6 +143,28 @@ fun InitiativeScreen(
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onBackground
                     )
+                    Spacer(modifier = Modifier.size(16.dp))
+                    initiativeViewModel.enemyInitiativeRolls
+                        .withIndex()
+                        .sortedByDescending { it.value }
+                        .forEach { (index, initiativeRoll) ->
+                            Row {
+                                Text(
+                                    text = "Enemy ${index + 1}: ",
+                                    color = MaterialTheme.colorScheme.secondary,
+                                    fontWeight = FontWeight.SemiBold,
+                                    fontSize = 16.sp
+                                )
+                                Spacer(modifier = Modifier.size(4.dp))
+                                Text(
+                                    text = "$initiativeRoll",
+                                    color = MaterialTheme.colorScheme.onBackground,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 16.sp
+                                )
+                            }
+                        }
+
                 }
             }
         }
@@ -163,6 +187,10 @@ fun PlayerRoll(players: Int) {
 @Composable
 fun InitiativePreview() {
     DNDToolsTheme {
+        val viewModel = InitiativeViewModel().apply {
+            enemies = 4
+            generateInitiativeRolls() // Optional: Generate initiative rolls for the preview
+        }
         InitiativeScreen(
             adventure = Adventure(
                 1,
@@ -170,6 +198,7 @@ fun InitiativePreview() {
                 "Moon Over Graymoor",
                 4,
                 "Sword's Coast"
-            ), back = {})
+            ), back = {}, initiativeViewModel = viewModel
+        )
     }
 }
