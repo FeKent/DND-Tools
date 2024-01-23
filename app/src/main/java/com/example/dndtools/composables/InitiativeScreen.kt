@@ -34,20 +34,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.dndtools.data.Adventure
 import com.example.dndtools.data.AdventureType
 import com.example.dndtools.ui.theme.DNDToolsTheme
+import com.example.dndtools.viewmodels.InitiativeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InitiativeScreen(back: () -> Unit, adventure: Adventure?) {
+fun InitiativeScreen(
+    back: () -> Unit,
+    adventure: Adventure?,
+    initiativeViewModel: InitiativeViewModel = viewModel()
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        var enemies by remember { mutableStateOf("") }
-
+        val state = initiativeViewModel.enemies
+        var enemies by remember { mutableStateOf(state?.toString() ?: "") }
 
         CenterAlignedTopAppBar(
             title = {
@@ -82,7 +88,7 @@ fun InitiativeScreen(back: () -> Unit, adventure: Adventure?) {
                     AddNumField(
                         label = "Number of Enemies",
                         value = enemies,
-                        onValueChange = { enemies = it })
+                        onValueChange = { enemies = it ; enemies.toInt() })
                 }
                 Spacer(modifier = Modifier.size(54.dp))
                 Column(
@@ -105,7 +111,8 @@ fun InitiativeScreen(back: () -> Unit, adventure: Adventure?) {
                         onClick = { /*TODO*/ },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor = MaterialTheme.colorScheme.onBackground),
+                            contentColor = MaterialTheme.colorScheme.onBackground
+                        ),
                         contentPadding = PaddingValues(16.dp)
                     ) {
                         Text(text = "Next", fontSize = 35.sp)
