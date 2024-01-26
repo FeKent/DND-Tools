@@ -118,7 +118,12 @@ fun InitiativeScreen(
                             }
                             Spacer(modifier = Modifier.size(54.dp))
                             TextButton(
-                                onClick = { currentState = ScreenState.Output },
+                                onClick = {
+                                    currentState =
+                                        ScreenState.Output;
+                                    initiativeViewModel.setEnemiesCount(enemies.toInt())
+                                    initiativeViewModel.generateInitiativeRolls()
+                                },
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = MaterialTheme.colorScheme.primary,
                                     contentColor = MaterialTheme.colorScheme.onBackground
@@ -128,6 +133,7 @@ fun InitiativeScreen(
                                 Text(text = "Next", fontSize = 35.sp)
                             }
                         }
+
                     }
                 }
             }
@@ -144,6 +150,7 @@ fun InitiativeScreen(
                         color = MaterialTheme.colorScheme.onBackground
                     )
                     Spacer(modifier = Modifier.size(16.dp))
+
                     initiativeViewModel.enemyInitiativeRolls
                         .withIndex()
                         .sortedByDescending { it.value }
@@ -164,7 +171,6 @@ fun InitiativeScreen(
                                 )
                             }
                         }
-
                 }
             }
         }
