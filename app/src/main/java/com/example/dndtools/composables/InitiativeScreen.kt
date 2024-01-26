@@ -141,7 +141,7 @@ fun InitiativeScreen(
             ScreenState.Output -> {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState())
                 ) {
                     Text(
                         text = "Round: 1",
