@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalComposeUiApi::class)
+
 package com.example.dndtools.composables
 
 import androidx.compose.foundation.background
@@ -9,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -32,10 +35,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -170,7 +175,7 @@ fun InitiativeScreen(
                             "Enemy ${index + 1 - initiativeViewModel.characterRolls.size}"
                         }
 
-                        Row {
+                        Row(modifier = Modifier.padding(4.dp)) {
                             Text(
                                 text = "$rollType: ",
                                 color = if (rollType.contains("Character")) {
@@ -202,24 +207,43 @@ fun InitiativeScreen(
 
 
 @Composable
-fun PlayerRoll(players: Int, initiativeViewModel: InitiativeViewModel, focusRequesters: List<FocusRequester>) {
+fun PlayerRoll(
+    players: Int,
+    initiativeViewModel: InitiativeViewModel,
+    focusRequesters: List<FocusRequester>,
+) {
     var playerRoll by remember { mutableStateOf("") }
+    val isLastPlayer = players == focusRequesters.size
+    val keyboardController = LocalSoftwareKeyboardController.current
+
 
     Row {
         TextField(
             value = playerRoll,
             onValueChange = { playerRoll = it },
             singleLine = true,
-            label = { Text(text = "Character: $players", color = MaterialTheme.colorScheme.primary)  },
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next, keyboardType = KeyboardType.Number),
+            label = {
+                Text(
+                    text = "Character: $players",
+                    color = MaterialTheme.colorScheme.primary
+                )
+            },
+            keyboardOptions = KeyboardOptions(
+                imeAction = if (isLastPlayer) ImeAction.Done else ImeAction.Next,
+                keyboardType = KeyboardType.Number
+            ),
             keyboardActions = KeyboardActions(onNext = {
                 initiativeViewModel.addCharacterRoll(playerRoll.toInt())
                 // Focus should be requested on the next TextField, not the current one
                 val currentIndex = players - 1
                 if (currentIndex < focusRequesters.size - 1) {
-                    focusRequesters[currentIndex + 1]?.requestFocus()
+                    focusRequesters[currentIndex + 1].requestFocus()
                 }
-            }),
+            }, onDone = {
+                initiativeViewModel.addCharacterRoll(playerRoll.toInt())
+                keyboardController?.hide()
+            }
+            ),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = MaterialTheme.colorScheme.onPrimary,
                 unfocusedContainerColor = MaterialTheme.colorScheme.onPrimary,
@@ -234,7 +258,7 @@ fun PlayerRoll(players: Int, initiativeViewModel: InitiativeViewModel, focusRequ
 @Composable
 fun PlayerRolls(adventure: Adventure?, initiativeViewModel: InitiativeViewModel) {
     // Check if adventure and initiativeViewModel are not null, and players count is greater than 0
-    if (adventure != null ) {
+    if (adventure != null) {
         // Create a list of FocusRequester instances
         val focusRequesters = remember {
             List(adventure.players) { FocusRequester() }
