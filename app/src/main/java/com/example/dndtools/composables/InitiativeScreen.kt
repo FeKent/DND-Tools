@@ -113,14 +113,13 @@ fun InitiativeScreen(
                             )
                             Spacer(modifier = Modifier.size(16.dp))
                             for (i in 1..(adventure?.players ?: 0)) {
-                                PlayerRoll(players = i)
+                                PlayerRoll(players = i, initiativeViewModel)
                                 Spacer(modifier = Modifier.size(16.dp))
                             }
                             Spacer(modifier = Modifier.size(54.dp))
                             TextButton(
                                 onClick = {
-                                    currentState =
-                                        ScreenState.Output;
+                                    currentState = ScreenState.Output
                                     initiativeViewModel.setEnemiesCount(enemies.toInt())
                                     initiativeViewModel.generateInitiativeRolls()
                                 },
@@ -179,13 +178,13 @@ fun InitiativeScreen(
 
 
 @Composable
-fun PlayerRoll(players: Int) {
+fun PlayerRoll(players: Int, initiativeViewModel: InitiativeViewModel) {
     var playerRoll by remember { mutableStateOf("") }
     Row {
         AddNumField(
             label = "Character: $players",
             value = playerRoll,
-            onValueChange = { playerRoll = it })
+            onValueChange = { playerRoll = it ; initiativeViewModel.addCharacterRoll(it.toInt()) })
     }
 }
 

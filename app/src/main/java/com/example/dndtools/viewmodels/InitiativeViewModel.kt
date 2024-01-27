@@ -5,6 +5,12 @@ import androidx.lifecycle.ViewModel
 class InitiativeViewModel: ViewModel() {
     var enemies: Int? = null
     var enemyInitiativeRolls: List<Int> = emptyList()
+    var characterRolls: MutableList<Int> = mutableListOf()
+
+    fun addCharacterRoll(roll: Int){
+        characterRolls.add(roll)
+        println("Character Rolls: $characterRolls")
+    }
 
     fun setEnemiesCount(enemiesCount: Int) {
         enemies = enemiesCount
