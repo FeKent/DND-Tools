@@ -150,26 +150,42 @@ fun InitiativeScreen(
                     )
                     Spacer(modifier = Modifier.size(16.dp))
 
-                    initiativeViewModel.enemyInitiativeRolls
-                        .withIndex()
-                        .sortedByDescending { it.value }
-                        .forEach { (index, initiativeRoll) ->
-                            Row {
-                                Text(
-                                    text = "Enemy ${index + 1}: ",
-                                    color = MaterialTheme.colorScheme.secondary,
-                                    fontWeight = FontWeight.SemiBold,
-                                    fontSize = 16.sp
-                                )
-                                Spacer(modifier = Modifier.size(4.dp))
-                                Text(
-                                    text = "$initiativeRoll",
-                                    color = MaterialTheme.colorScheme.onBackground,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 16.sp
-                                )
-                            }
+                    val allRolls =
+                        (initiativeViewModel.characterRolls + initiativeViewModel.enemyInitiativeRolls)
+                            .withIndex()
+                            .sortedByDescending { it.value }
+
+                    allRolls.forEach { (index, roll) ->
+                        val rollType = if (index < initiativeViewModel.characterRolls.size) {
+                            "Character ${index + 1}"
+                        } else {
+                            "Enemy ${index + 1 - initiativeViewModel.characterRolls.size}"
                         }
+
+                        Row {
+                            Text(
+                                text = "$rollType: ",
+                                color = if (rollType.contains("Character")) {
+                                    MaterialTheme.colorScheme.onBackground
+                                } else {
+                                    MaterialTheme.colorScheme.secondary
+                                },
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 16.sp
+                            )
+                            Spacer(modifier = Modifier.size(4.dp))
+                            Text(
+                                text = "$roll",
+                                color = if (rollType.contains("Character")) {
+                                    MaterialTheme.colorScheme.secondary
+                                } else {
+                                    MaterialTheme.colorScheme.onBackground
+                                },
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp
+                            )
+                        }
+                    }
                 }
             }
         }
