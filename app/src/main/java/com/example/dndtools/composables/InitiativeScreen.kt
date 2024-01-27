@@ -34,6 +34,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -119,10 +121,7 @@ fun InitiativeScreen(
                                 color = MaterialTheme.colorScheme.onBackground, fontSize = 24.sp
                             )
                             Spacer(modifier = Modifier.size(16.dp))
-                            for (i in 1..(adventure?.players ?: 0)) {
-                                PlayerRoll(players = i, initiativeViewModel)
-                                Spacer(modifier = Modifier.size(16.dp))
-                            }
+                            PlayerRolls(adventure, initiativeViewModel)
                             Spacer(modifier = Modifier.size(54.dp))
                             TextButton(
                                 onClick = {
@@ -203,8 +202,9 @@ fun InitiativeScreen(
 
 
 @Composable
-fun PlayerRoll(players: Int, initiativeViewModel: InitiativeViewModel) {
+fun PlayerRoll(players: Int, initiativeViewModel: InitiativeViewModel, focusRequesters: List<FocusRequester>) {
     var playerRoll by remember { mutableStateOf("") }
+
     Row {
         TextField(
             value = playerRoll,
@@ -212,14 +212,38 @@ fun PlayerRoll(players: Int, initiativeViewModel: InitiativeViewModel) {
             singleLine = true,
             label = { Text(text = "Character: $players", color = MaterialTheme.colorScheme.primary)  },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next, keyboardType = KeyboardType.Number),
-            keyboardActions = KeyboardActions(onNext = {initiativeViewModel.addCharacterRoll(playerRoll.toInt()) ; KeyboardActions.Default}),
+            keyboardActions = KeyboardActions(onNext = {
+                initiativeViewModel.addCharacterRoll(playerRoll.toInt())
+                // Focus should be requested on the next TextField, not the current one
+                val currentIndex = players - 1
+                if (currentIndex < focusRequesters.size - 1) {
+                    focusRequesters[currentIndex + 1]?.requestFocus()
+                }
+            }),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = MaterialTheme.colorScheme.onPrimary,
                 unfocusedContainerColor = MaterialTheme.colorScheme.onPrimary,
                 disabledContainerColor = MaterialTheme.colorScheme.onPrimary,
             ),
-            textStyle = TextStyle(color = MaterialTheme.colorScheme.primary)
+            textStyle = TextStyle(color = MaterialTheme.colorScheme.primary),
+            modifier = Modifier.focusRequester(focusRequesters[players - 1])
         )
+    }
+}
+
+@Composable
+fun PlayerRolls(adventure: Adventure?, initiativeViewModel: InitiativeViewModel) {
+    // Check if adventure and initiativeViewModel are not null, and players count is greater than 0
+    if (adventure != null ) {
+        // Create a list of FocusRequester instances
+        val focusRequesters = remember {
+            List(adventure.players) { FocusRequester() }
+        }
+
+        for (i in 1..adventure.players) {
+            PlayerRoll(players = i, initiativeViewModel, focusRequesters)
+            Spacer(modifier = Modifier.size(16.dp))
+        }
     }
 }
 
