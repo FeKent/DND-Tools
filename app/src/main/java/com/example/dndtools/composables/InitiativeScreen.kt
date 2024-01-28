@@ -38,8 +38,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -208,14 +208,14 @@ fun InitiativeScreen(
 
 @Composable
 fun PlayerRoll(
-    players: Int,
+    playerNumber: Int,
+    totalPlayers: Int,
     initiativeViewModel: InitiativeViewModel,
-    focusRequesters: List<FocusRequester>,
 ) {
     var playerRoll by remember { mutableStateOf("") }
-    val isLastPlayer = players == focusRequesters.size
+    val isLastPlayer = playerNumber == totalPlayers
     val keyboardController = LocalSoftwareKeyboardController.current
-
+    val focusManager = LocalFocusManager.current
 
     Row {
         TextField(
@@ -224,7 +224,7 @@ fun PlayerRoll(
             singleLine = true,
             label = {
                 Text(
-                    text = "Character: $players",
+                    text = "Character: $playerNumber",
                     color = MaterialTheme.colorScheme.primary
                 )
             },
@@ -235,10 +235,7 @@ fun PlayerRoll(
             keyboardActions = KeyboardActions(onNext = {
                 initiativeViewModel.addCharacterRoll(playerRoll.toInt())
                 // Focus should be requested on the next TextField, not the current one
-                val currentIndex = players - 1
-                if (currentIndex < focusRequesters.size - 1) {
-                    focusRequesters[currentIndex + 1].requestFocus()
-                }
+                focusManager.moveFocus(FocusDirection.Next)
             }, onDone = {
                 initiativeViewModel.addCharacterRoll(playerRoll.toInt())
                 keyboardController?.hide()
@@ -250,22 +247,17 @@ fun PlayerRoll(
                 disabledContainerColor = MaterialTheme.colorScheme.onPrimary,
             ),
             textStyle = TextStyle(color = MaterialTheme.colorScheme.primary),
-            modifier = Modifier.focusRequester(focusRequesters[players - 1])
         )
     }
 }
 
 @Composable
 fun PlayerRolls(adventure: Adventure?, initiativeViewModel: InitiativeViewModel) {
-    // Check if adventure and initiativeViewModel are not null, and players count is greater than 0
+    // Check if adventure and initiativeViewModel are not null
     if (adventure != null) {
-        // Create a list of FocusRequester instances
-        val focusRequesters = remember {
-            List(adventure.players) { FocusRequester() }
-        }
 
         for (i in 1..adventure.players) {
-            PlayerRoll(players = i, initiativeViewModel, focusRequesters)
+            PlayerRoll(i, adventure.players, initiativeViewModel )
             Spacer(modifier = Modifier.size(16.dp))
         }
     }
