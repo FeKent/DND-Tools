@@ -5,23 +5,30 @@ import androidx.lifecycle.ViewModel
 class InitiativeViewModel: ViewModel() {
     var enemies: Int? = null
     var enemyInitiativeRolls: List<Int> = emptyList()
-    var characterRolls: MutableList<Int> = mutableListOf()
 
+    var npcs: Int? = null
+    var npcsInitiativeRolls: List<Int> = emptyList()
+
+    var characterRolls: MutableList<Int> = mutableListOf()
     fun addCharacterRoll(roll: Int){
         characterRolls.add(roll)
-        println("Character Rolls: $characterRolls")
     }
-
     fun setEnemiesCount(enemiesCount: Int) {
         enemies = enemiesCount
     }
+    fun setNpcsCount(npcsCount: Int){
+        npcs = npcsCount
+    }
     fun generateInitiativeRolls() {
-        println("Generate Initiative Rolls: enemies=$enemies")
         enemies?.let { numberOfEnemies ->
             enemyInitiativeRolls = (1..numberOfEnemies).map {
                 (1..20).random()
             }
         }
-        println("Generate Initiative Rolls: enemyInitiativeRolls=$enemyInitiativeRolls")
+        npcs?.let { numberOfNpcs ->
+            npcsInitiativeRolls = (1..numberOfNpcs).map {
+                (1..20).random()
+            }
+        }
     }
 }

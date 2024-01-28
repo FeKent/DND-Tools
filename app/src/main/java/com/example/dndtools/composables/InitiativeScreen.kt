@@ -70,6 +70,7 @@ fun InitiativeScreen(
     var currentState by remember { mutableStateOf(ScreenState.Input) }
     val state = initiativeViewModel.enemies
     var enemies by remember { mutableStateOf(state?.toString() ?: "") }
+    var npcs by remember { mutableStateOf(initiativeViewModel.npcs?.toString() ?: "") }
 
 
     Column(
@@ -113,6 +114,11 @@ fun InitiativeScreen(
                                 label = "Number of Enemies",
                                 value = enemies,
                                 onValueChange = { enemies = it; enemies.toInt() })
+                            Spacer(modifier = Modifier.size(4.dp))
+                            AddNumField(
+                                label = "Number of NPCs",
+                                value = npcs,
+                                onValueChange = { npcs = it; npcs.toInt() })
                         }
                         Spacer(modifier = Modifier.size(54.dp))
                         Column(
@@ -132,6 +138,7 @@ fun InitiativeScreen(
                                 onClick = {
                                     currentState = ScreenState.Output
                                     initiativeViewModel.setEnemiesCount(enemies.toInt())
+                                    initiativeViewModel.setNpcsCount(npcs.toInt())
                                     initiativeViewModel.generateInitiativeRolls()
                                 },
                                 colors = ButtonDefaults.buttonColors(
@@ -164,24 +171,30 @@ fun InitiativeScreen(
                     Spacer(modifier = Modifier.size(16.dp))
 
                     val allRolls =
-                        (initiativeViewModel.characterRolls + initiativeViewModel.enemyInitiativeRolls)
+                        (initiativeViewModel.characterRolls + initiativeViewModel.enemyInitiativeRolls + initiativeViewModel.npcsInitiativeRolls)
                             .withIndex()
                             .sortedByDescending { it.value }
 
                     allRolls.forEach { (index, roll) ->
-                        val rollType = if (index < initiativeViewModel.characterRolls.size) {
-                            "Character ${index + 1}"
-                        } else {
-                            "Enemy ${index + 1 - initiativeViewModel.characterRolls.size}"
+                        val rollType = when {
+                            index < initiativeViewModel.characterRolls.size -> {
+                                "Character ${index + 1}"
+                            }
+                            index < initiativeViewModel.characterRolls.size + initiativeViewModel.enemyInitiativeRolls.size -> {
+                                "Enemy ${index + 1 - initiativeViewModel.characterRolls.size}"
+                            }
+                            else -> {
+                                "NPC ${index + 1 - initiativeViewModel.characterRolls.size - initiativeViewModel.enemyInitiativeRolls.size}"
+                            }
                         }
 
                         Row(modifier = Modifier.padding(4.dp)) {
                             Text(
                                 text = "$rollType: ",
-                                color = if (rollType.contains("Character")) {
-                                    MaterialTheme.colorScheme.onBackground
-                                } else {
+                                color = if (rollType.contains("Enemy")) {
                                     MaterialTheme.colorScheme.secondary
+                                } else {
+                                    MaterialTheme.colorScheme.onBackground
                                 },
                                 fontWeight = FontWeight.SemiBold,
                                 fontSize = 16.sp
@@ -189,7 +202,7 @@ fun InitiativeScreen(
                             Spacer(modifier = Modifier.size(4.dp))
                             Text(
                                 text = "$roll",
-                                color = if (rollType.contains("Character")) {
+                                color = if (rollType.contains("NPC") || rollType.contains("Enemy")) {
                                     MaterialTheme.colorScheme.secondary
                                 } else {
                                     MaterialTheme.colorScheme.onBackground
@@ -256,7 +269,7 @@ fun PlayerRolls(adventure: Adventure?, initiativeViewModel: InitiativeViewModel)
     if (adventure != null) {
 
         for (i in 1..adventure.players) {
-            PlayerRoll(i, adventure.players, initiativeViewModel )
+            PlayerRoll(i, adventure.players, initiativeViewModel)
             Spacer(modifier = Modifier.size(16.dp))
         }
     }
@@ -268,7 +281,9 @@ fun InitiativePreview() {
     DNDToolsTheme {
         val viewModel = InitiativeViewModel().apply {
             enemies = 4
+            npcs = 3
             generateInitiativeRolls() // Optional: Generate initiative rolls for the preview
+            characterRolls = listOf<Int>(1, 2, 3,) as MutableList<Int>
         }
         InitiativeScreen(
             adventure = Adventure(
