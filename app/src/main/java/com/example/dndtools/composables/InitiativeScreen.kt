@@ -234,7 +234,6 @@ fun PlayerRoll(
             ),
             keyboardActions = KeyboardActions(onNext = {
                 initiativeViewModel.addCharacterRoll(playerRoll.toInt())
-                // Focus should be requested on the next TextField, not the current one
                 focusManager.moveFocus(FocusDirection.Next)
             }, onDone = {
                 initiativeViewModel.addCharacterRoll(playerRoll.toInt())
