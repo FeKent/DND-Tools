@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
 
 package com.example.dndtools.composables
 
@@ -22,14 +22,18 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -46,7 +50,23 @@ import com.example.dndtools.ui.theme.DNDToolsTheme
 import com.example.dndtools.ui.theme.light1
 
 @Composable
-fun SelectionScreen(back: () -> Unit, adventure: Adventure?, initiativeScreen: () -> Unit, delete: (Adventure)-> Unit, edit: (Adventure)-> Unit) {
+fun SelectionScreen(
+    back: () -> Unit,
+    adventure: Adventure?,
+    initiativeScreen: () -> Unit,
+    delete: (Adventure) -> Unit,
+    edit: (Adventure) -> Unit
+) {
+    val showDeleteDialog = remember { mutableStateOf(false) }
+
+    if (showDeleteDialog.value) {
+        DeleteAlertDialog(
+            onDismiss = { showDeleteDialog.value = false },
+            onConfirm = { delete(adventure!!); showDeleteDialog.value = false },
+            adventureType = adventure?.adventureType!!.name
+        )
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -102,9 +122,15 @@ fun SelectionScreen(back: () -> Unit, adventure: Adventure?, initiativeScreen: (
                 Row(horizontalArrangement = Arrangement.SpaceBetween) {
                     IconWithCaption(Icons.Filled.AddCircle, "Add Notes", onClick = {})
                     Spacer(modifier = Modifier.size(24.dp))
-                    IconWithCaption(Icons.Filled.Create, "Edit Info", onClick = {edit(adventure!!)})
+                    IconWithCaption(
+                        Icons.Filled.Create,
+                        "Edit Info",
+                        onClick = { edit(adventure!!) })
                     Spacer(modifier = Modifier.size(24.dp))
-                    IconWithCaption(Icons.Filled.Delete, "Delete", onClick = {delete(adventure!!)})
+                    IconWithCaption(
+                        Icons.Filled.Delete,
+                        "Delete",
+                        onClick = { showDeleteDialog.value = true })
                 }
             }
         }
@@ -141,11 +167,41 @@ fun IconWithCaption(
     }
 }
 
+@Composable
+fun DeleteAlertDialog(
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit,
+    adventureType: String
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text(text = "OK", color = MaterialTheme.colorScheme.secondary)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(text = "Cancel", color = MaterialTheme.colorScheme.secondary)
+            }
+        },
+        text = { Text(text = "Delete $adventureType?", fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.secondary) },
+        containerColor = MaterialTheme.colorScheme.primary,
+
+    )
+
+
+}
 
 @Preview(showSystemUi = true)
 @Composable
 fun SelectionPreview() {
     DNDToolsTheme {
-        SelectionScreen(back = {}, adventure = Adventure(1, AdventureType.OneShot,"Misfits", 3, "Sword's Coast"), {}, {}, {})
+        SelectionScreen(
+            back = {},
+            adventure = Adventure(1, AdventureType.OneShot, "Misfits", 3, "Sword's Coast"),
+            {},
+            {},
+            {})
     }
 }
