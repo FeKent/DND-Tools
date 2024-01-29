@@ -71,6 +71,7 @@ fun InitiativeScreen(
     val state = initiativeViewModel.enemies
     var enemies by remember { mutableStateOf(state?.toString() ?: "") }
     var npcs by remember { mutableStateOf(initiativeViewModel.npcs?.toString() ?: "") }
+    var showNpcsField by remember { mutableStateOf(false) }
 
 
     Column(
@@ -115,10 +116,28 @@ fun InitiativeScreen(
                                 value = enemies,
                                 onValueChange = { enemies = it; enemies.toInt() })
                             Spacer(modifier = Modifier.size(4.dp))
-                            AddNumField(
-                                label = "Number of NPCs",
-                                value = npcs,
-                                onValueChange = { npcs = it; npcs.toInt() })
+                            TextButton(
+                                onClick = { showNpcsField = !showNpcsField },
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = MaterialTheme.colorScheme.primary,
+                                    contentColor = MaterialTheme.colorScheme.onBackground
+                                ),
+                                contentPadding = PaddingValues(10.dp)
+                            ) {
+                                Text(
+                                    text = "Add NPCs?",
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = MaterialTheme.colorScheme.onBackground,
+                                    fontSize = 16.sp
+                                )
+                            }
+                            if (showNpcsField) {
+                                AddNumField(
+                                    label = "Number of NPCs",
+                                    value = npcs,
+                                    onValueChange = { npcs = it; npcs.toIntOrNull() }
+                                )
+                            }
                         }
                         Spacer(modifier = Modifier.size(54.dp))
                         Column(
@@ -219,6 +238,7 @@ fun InitiativeScreen(
 }
 
 
+
 @Composable
 fun PlayerRoll(
     playerNumber: Int,
@@ -283,7 +303,7 @@ fun InitiativePreview() {
             enemies = 4
             npcs = 3
             generateInitiativeRolls() // Optional: Generate initiative rolls for the preview
-            characterRolls = listOf<Int>(1, 2, 3,) as MutableList<Int>
+            characterRolls = listOf(1, 2, 3) as MutableList<Int>
         }
         InitiativeScreen(
             adventure = Adventure(
