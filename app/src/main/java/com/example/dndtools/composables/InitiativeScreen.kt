@@ -116,20 +116,22 @@ fun InitiativeScreen(
                                 value = enemies,
                                 onValueChange = { enemies = it; enemies.toInt() })
                             Spacer(modifier = Modifier.size(4.dp))
-                            TextButton(
-                                onClick = { showNpcsField = !showNpcsField },
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = MaterialTheme.colorScheme.primary,
-                                    contentColor = MaterialTheme.colorScheme.onBackground
-                                ),
-                                contentPadding = PaddingValues(10.dp)
-                            ) {
-                                Text(
-                                    text = "Add NPCs?",
-                                    fontWeight = FontWeight.SemiBold,
-                                    color = MaterialTheme.colorScheme.onBackground,
-                                    fontSize = 16.sp
-                                )
+                            if (!showNpcsField) {
+                                TextButton(
+                                    onClick = { showNpcsField = !showNpcsField },
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = MaterialTheme.colorScheme.primary,
+                                        contentColor = MaterialTheme.colorScheme.onBackground
+                                    ),
+                                    contentPadding = PaddingValues(10.dp)
+                                ) {
+                                    Text(
+                                        text = "Add NPCs?",
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = MaterialTheme.colorScheme.onBackground,
+                                        fontSize = 16.sp
+                                    )
+                                }
                             }
                             if (showNpcsField) {
                                 AddNumField(
@@ -137,6 +139,21 @@ fun InitiativeScreen(
                                     value = npcs,
                                     onValueChange = { npcs = it; npcs.toIntOrNull() }
                                 )
+                                TextButton(
+                                    onClick = { showNpcsField = !showNpcsField },
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = MaterialTheme.colorScheme.primary,
+                                        contentColor = MaterialTheme.colorScheme.onBackground
+                                    ),
+                                    contentPadding = PaddingValues(10.dp)
+                                ) {
+                                    Text(
+                                        text = "Remove NPCs?",
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = MaterialTheme.colorScheme.onBackground,
+                                        fontSize = 16.sp
+                                    )
+                                }
                             }
                         }
                         Spacer(modifier = Modifier.size(54.dp))
