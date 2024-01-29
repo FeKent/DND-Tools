@@ -174,8 +174,11 @@ fun InitiativeScreen(
                                 onClick = {
                                     currentState = ScreenState.Output
                                     initiativeViewModel.setEnemiesCount(enemies.toInt())
-                                    initiativeViewModel.setNpcsCount(npcs.toInt())
-                                    initiativeViewModel.generateInitiativeRolls()
+                                    initiativeViewModel.generateEnemyRolls()
+                                    if (showNpcsField){
+                                        initiativeViewModel.setNpcsCount(npcs.toInt())
+                                        initiativeViewModel.generateNPCRolls()
+                                    }
                                 },
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = MaterialTheme.colorScheme.primary,
@@ -319,7 +322,8 @@ fun InitiativePreview() {
         val viewModel = InitiativeViewModel().apply {
             enemies = 4
             npcs = 3
-            generateInitiativeRolls() // Optional: Generate initiative rolls for the preview
+            generateEnemyRolls()
+            generateNPCRolls()
             characterRolls = listOf(1, 2, 3) as MutableList<Int>
         }
         InitiativeScreen(

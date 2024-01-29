@@ -19,12 +19,14 @@ class InitiativeViewModel: ViewModel() {
     fun setNpcsCount(npcsCount: Int){
         npcs = npcsCount
     }
-    fun generateInitiativeRolls() {
+    fun generateEnemyRolls() {
         enemies?.let { numberOfEnemies ->
             enemyInitiativeRolls = (1..numberOfEnemies).map {
                 (1..20).random()
             }
         }
+    }
+    fun generateNPCRolls(){
         npcs?.let { numberOfNpcs ->
             npcsInitiativeRolls = (1..numberOfNpcs).map {
                 (1..20).random()
