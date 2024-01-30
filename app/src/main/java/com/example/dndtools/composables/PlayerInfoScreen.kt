@@ -26,7 +26,7 @@ import com.example.dndtools.data.AdventureType
 import com.example.dndtools.ui.theme.DNDToolsTheme
 
 @Composable
-fun PlayerInfoScreen(adventure: Adventure) {
+fun PlayerInfoScreen(adventure: Adventure, back: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -52,7 +52,7 @@ fun PlayerInfoScreen(adventure: Adventure) {
                     modifier = Modifier
                         .size(40.dp)
                         .clickable {
-                            /*TODO*/
+                            back()
                         }
                 )
             }
@@ -64,6 +64,13 @@ fun PlayerInfoScreen(adventure: Adventure) {
 @Composable
 fun PlayerPreview() {
     DNDToolsTheme {
-        PlayerInfoScreen(adventure = Adventure(1, AdventureType.OneShot, "Misfits", 3, "Sword's Coast"))
+        PlayerInfoScreen(
+            adventure = Adventure(
+                1,
+                AdventureType.OneShot,
+                "Misfits",
+                3,
+                "Sword's Coast"
+            ), {})
     }
 }

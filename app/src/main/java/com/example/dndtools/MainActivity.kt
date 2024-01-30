@@ -159,7 +159,7 @@ fun DndToolsApp() {
                 selectedAdventure = database.adventureDao().getAdventureById(id)
             }
             selectedAdventure?.let { adventure ->
-                PlayerInfoScreen(adventure = adventure)
+                PlayerInfoScreen(adventure = adventure, back = { navController.popBackStack() },)
             }
         }
     }
