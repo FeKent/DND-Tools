@@ -24,6 +24,7 @@ import com.example.dndtools.composables.AddScreen
 import com.example.dndtools.composables.EditScreen
 import com.example.dndtools.composables.InitiativeScreen
 import com.example.dndtools.composables.IntroScreen
+import com.example.dndtools.composables.PlayerInfoScreen
 import com.example.dndtools.composables.SelectionScreen
 import com.example.dndtools.data.Adventure
 import com.example.dndtools.data.DndToolsDatabase
@@ -53,6 +54,7 @@ sealed class Screen(val route: String) {
     object Selection : Screen("selection/{id}")
     object Initiative : Screen("initiative/{id}")
     object Edit : Screen("edit/{id}")
+    object PlayerInfo : Screen("playerInfo/{id}")
 }
 
 @Composable
@@ -119,7 +121,8 @@ fun DndToolsApp() {
                         database.adventureDao().delete(adventure)
                     }; navController.popBackStack()
                 },
-                edit = {adventure -> navController.navigate("edit/${adventure.id}") }
+                edit = {adventure -> navController.navigate("edit/${adventure.id}") },
+                playerInfoScreen = {adventure -> navController.navigate("playerInfo/${adventure.id}") }
             )
         }
         composable(Screen.Initiative.route) { navBackStackEntry ->
@@ -147,6 +150,16 @@ fun DndToolsApp() {
                     onEdit = { updatedAdventure ->
                         editScreenScope.launch { database.adventureDao().editAdventure(updatedAdventure) ; navController.popBackStack() }
                     })
+            }
+        }
+        composable(Screen.PlayerInfo.route){navBackStackEntry ->
+            val id = navBackStackEntry.arguments!!.getString("id")!!.toInt()
+            var selectedAdventure by remember { mutableStateOf<Adventure?>(null) }
+            LaunchedEffect(id) {
+                selectedAdventure = database.adventureDao().getAdventureById(id)
+            }
+            selectedAdventure?.let { adventure ->
+                PlayerInfoScreen(adventure = adventure)
             }
         }
     }
