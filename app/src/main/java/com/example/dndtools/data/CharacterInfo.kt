@@ -1,11 +1,16 @@
 package com.example.dndtools.data
 
+import android.os.Parcelable
+import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 
-data class PlayerInfo(
+@Entity
+@Parcelize
+data class CharacterInfo(
     @PrimaryKey val id: Int,
     val characterNames: List<String>,
-)
+) : Parcelable
 
 data class CharacterProfile(
     val name: String,
