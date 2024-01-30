@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 
 package com.example.dndtools.composables
 
@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -29,8 +30,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -38,14 +43,21 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.dndtools.data.Adventure
 import com.example.dndtools.data.AdventureType
+import com.example.dndtools.data.CharacterInfo
 import com.example.dndtools.ui.theme.DNDToolsTheme
+import com.example.dndtools.viewmodels.CharacterViewModel
+import kotlin.math.absoluteValue
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun CharacterInfoScreen(adventure: Adventure, back: () -> Unit) {
-    var characterName by remember { mutableStateOf("") }
-
+fun CharacterInfoScreen(
+    adventure: Adventure,
+    back: () -> Unit,
+    characterViewModel: CharacterViewModel = viewModel()
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -83,36 +95,22 @@ fun CharacterInfoScreen(adventure: Adventure, back: () -> Unit) {
                 .fillMaxWidth()
         ) {
             for (i in 1..adventure.players) {
-                Row {
-                    TextField(
-                        value = characterName,
-                        onValueChange = { characterName = it },
-                        singleLine = true,
-                        label = {
-                            Text(
-                                text = "Character $i",
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        },
-                        keyboardOptions = KeyboardOptions(
-                            capitalization = KeyboardCapitalization.Words,
-                            keyboardType = KeyboardType.Text,
-                            imeAction = if (i == adventure.players) ImeAction.Done else ImeAction.Next
-                        ),
-                        colors = TextFieldDefaults.colors(
-                            focusedContainerColor = MaterialTheme.colorScheme.onPrimary,
-                            unfocusedContainerColor = MaterialTheme.colorScheme.onPrimary,
-                            disabledContainerColor = MaterialTheme.colorScheme.onPrimary,
-                        ),
-                        textStyle = TextStyle(color = MaterialTheme.colorScheme.primary),
-                    )
-                }
-                Spacer(modifier = Modifier.size(4.dp))
+                CharacterName(
+                    playerNumber = i,
+                    totalPlayers = adventure.players,
+                    characterViewModel = characterViewModel
+                )
             }
         }
         Spacer(modifier = Modifier.size(24.dp))
         IconButton(
-            onClick = { /*TODO*/ },
+            onClick = {
+                val newCharacterInfo =
+                    CharacterInfo(
+                        id = adventure.id.absoluteValue,
+                        characterNames = characterViewModel.characterNames
+                    )
+            },
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
             Icon(
@@ -123,6 +121,47 @@ fun CharacterInfoScreen(adventure: Adventure, back: () -> Unit) {
             )
         }
     }
+}
+
+@Composable
+fun CharacterName(playerNumber: Int, totalPlayers: Int, characterViewModel: CharacterViewModel) {
+    var characterName by remember { mutableStateOf("") }
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
+    val isLastPlayer = playerNumber == totalPlayers
+
+    Row {
+        TextField(
+            value = characterName,
+            onValueChange = { characterName = it },
+            singleLine = true,
+            label = {
+                Text(
+                    text = "Character $playerNumber",
+                    color = MaterialTheme.colorScheme.primary
+                )
+            },
+            keyboardOptions = KeyboardOptions(
+                capitalization = KeyboardCapitalization.Words,
+                keyboardType = KeyboardType.Text,
+                imeAction = if (isLastPlayer) ImeAction.Done else ImeAction.Next
+            ),
+            keyboardActions = KeyboardActions(onNext = {
+                characterViewModel.addCharacterName(characterName)
+                focusManager.moveFocus((FocusDirection.Next))
+            }, onDone = {
+                characterViewModel.addCharacterName(characterName)
+                keyboardController?.hide()
+            }),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = MaterialTheme.colorScheme.onPrimary,
+                unfocusedContainerColor = MaterialTheme.colorScheme.onPrimary,
+                disabledContainerColor = MaterialTheme.colorScheme.onPrimary,
+            ),
+            textStyle = TextStyle(color = MaterialTheme.colorScheme.primary),
+        )
+    }
+    Spacer(modifier = Modifier.size(4.dp))
 }
 
 
