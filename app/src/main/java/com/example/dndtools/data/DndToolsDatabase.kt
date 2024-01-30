@@ -8,3 +8,13 @@ abstract class DndToolsDatabase : RoomDatabase() {
     abstract fun adventureDao() : AdventureDao
 
 }
+
+@Database(entities = [CharacterInfo::class], version = 1, exportSchema = false)
+abstract class CharacterDatabase : RoomDatabase() {
+    abstract fun characterInfoDao() : CharacterInfoDao
+}
+
+@Database(entities = [CharacterProfile::class], version = 1, exportSchema = false)
+abstract class CharacterProfileDatabase : RoomDatabase() {
+    abstract fun characterProfileDao() : CharacterProfileDao
+}
