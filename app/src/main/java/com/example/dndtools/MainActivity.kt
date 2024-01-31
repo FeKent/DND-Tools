@@ -27,6 +27,7 @@ import com.example.dndtools.composables.InitiativeScreen
 import com.example.dndtools.composables.IntroScreen
 import com.example.dndtools.composables.SelectionScreen
 import com.example.dndtools.data.Adventure
+import com.example.dndtools.data.CharacterInfo
 import com.example.dndtools.data.DndToolsDatabase
 import com.example.dndtools.ui.theme.DNDToolsTheme
 import kotlinx.coroutines.launch
@@ -128,12 +129,16 @@ fun DndToolsApp() {
         composable(Screen.Initiative.route) { navBackStackEntry ->
             val id = navBackStackEntry.arguments!!.getString("id")!!.toInt()
             var selectedAdventure by remember { mutableStateOf<Adventure?>(null) }
+            var characterInfo by remember { mutableStateOf<CharacterInfo?>(null) }
 
             LaunchedEffect(id) {
                 selectedAdventure = database.adventureDao().getAdventureById(id)
+                val characterInfoList = database.characterInfoDao().getCharactersForAdventure(id)
+                println("CharacterInfoList size: ${characterInfoList.size}")
+                characterInfo = characterInfoList.firstOrNull()
             }
 
-            InitiativeScreen(adventure = selectedAdventure, back = { navController.popBackStack() })
+            InitiativeScreen(adventure = selectedAdventure, characterInfo = characterInfo,back = { navController.popBackStack() })
         }
         composable(Screen.Edit.route) { navBackStackEntry ->
             val id = navBackStackEntry.arguments!!.getString("id")!!.toInt()

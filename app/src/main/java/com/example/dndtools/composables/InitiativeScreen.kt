@@ -51,6 +51,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.dndtools.data.Adventure
 import com.example.dndtools.data.AdventureType
+import com.example.dndtools.data.CharacterInfo
 import com.example.dndtools.ui.theme.DNDToolsTheme
 import com.example.dndtools.viewmodels.InitiativeViewModel
 
@@ -65,6 +66,7 @@ enum class ScreenState {
 fun InitiativeScreen(
     back: () -> Unit,
     adventure: Adventure?,
+    characterInfo: CharacterInfo?,
     initiativeViewModel: InitiativeViewModel = viewModel()
 ) {
     var currentState by remember { mutableStateOf(ScreenState.Input) }
@@ -168,14 +170,14 @@ fun InitiativeScreen(
                                 color = MaterialTheme.colorScheme.onBackground, fontSize = 24.sp
                             )
                             Spacer(modifier = Modifier.size(16.dp))
-                            PlayerRolls(adventure, initiativeViewModel)
+                            PlayerRolls(adventure, characterInfo, initiativeViewModel)
                             Spacer(modifier = Modifier.size(54.dp))
                             TextButton(
                                 onClick = {
                                     currentState = ScreenState.Output
                                     initiativeViewModel.setEnemiesCount(enemies.toInt())
                                     initiativeViewModel.generateEnemyRolls()
-                                    if (showNpcsField){
+                                    if (showNpcsField) {
                                         initiativeViewModel.setNpcsCount(npcs.toInt())
                                         initiativeViewModel.generateNPCRolls()
                                     }
@@ -219,9 +221,11 @@ fun InitiativeScreen(
                             index < initiativeViewModel.characterRolls.size -> {
                                 "Character ${index + 1}"
                             }
+
                             index < initiativeViewModel.characterRolls.size + initiativeViewModel.enemyInitiativeRolls.size -> {
                                 "Enemy ${index + 1 - initiativeViewModel.characterRolls.size}"
                             }
+
                             else -> {
                                 "NPC ${index + 1 - initiativeViewModel.characterRolls.size - initiativeViewModel.enemyInitiativeRolls.size}"
                             }
@@ -258,11 +262,11 @@ fun InitiativeScreen(
 }
 
 
-
 @Composable
 fun PlayerRoll(
     playerNumber: Int,
     totalPlayers: Int,
+    characterInfo: CharacterInfo?,
     initiativeViewModel: InitiativeViewModel,
 ) {
     var playerRoll by remember { mutableStateOf("") }
@@ -277,7 +281,9 @@ fun PlayerRoll(
             singleLine = true,
             label = {
                 Text(
-                    text = "Character: $playerNumber",
+                    text = if (characterInfo != null) {
+                        "${characterInfo.characterNames[playerNumber]}"
+                    } else "Character $playerNumber",
                     color = MaterialTheme.colorScheme.primary
                 )
             },
@@ -304,12 +310,16 @@ fun PlayerRoll(
 }
 
 @Composable
-fun PlayerRolls(adventure: Adventure?, initiativeViewModel: InitiativeViewModel) {
+fun PlayerRolls(
+    adventure: Adventure?,
+    characterInfo: CharacterInfo?,
+    initiativeViewModel: InitiativeViewModel
+) {
     // Check if adventure and initiativeViewModel are not null
     if (adventure != null) {
 
         for (i in 1..adventure.players) {
-            PlayerRoll(i, adventure.players, initiativeViewModel)
+            PlayerRoll(i, adventure.players, characterInfo, initiativeViewModel)
             Spacer(modifier = Modifier.size(16.dp))
         }
     }
@@ -324,7 +334,7 @@ fun InitiativePreview() {
             npcs = 3
             generateEnemyRolls()
             generateNPCRolls()
-            characterRolls = listOf(1, 2, 3) as MutableList<Int>
+            characterRolls = listOf(1, 2, 3, 4) as MutableList<Int>
         }
         InitiativeScreen(
             adventure = Adventure(
@@ -333,7 +343,10 @@ fun InitiativePreview() {
                 "Moon Over Graymoor",
                 4,
                 "Sword's Coast"
-            ), back = {}, initiativeViewModel = viewModel
+            ),
+            back = {},
+            characterInfo = CharacterInfo(1, listOf("Aragorn", "Jason", "Jared", "Jimothy"), 1),
+            initiativeViewModel = viewModel
         )
     }
 }

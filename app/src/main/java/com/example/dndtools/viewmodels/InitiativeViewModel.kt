@@ -3,6 +3,7 @@ package com.example.dndtools.viewmodels
 import androidx.lifecycle.ViewModel
 
 class InitiativeViewModel: ViewModel() {
+
     var enemies: Int? = null
     var enemyInitiativeRolls: List<Int> = emptyList()
 

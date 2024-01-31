@@ -17,8 +17,8 @@ interface CharacterInfoDao {
     @Update
     suspend fun editInfo(characterInfo: CharacterInfo)
 
-    @Query ("SELECT * FROM CharacterInfo WHERE id = :infoId")
-    suspend fun getInfoById(infoId: Int): CharacterInfo?
+    @Query("SELECT * FROM CharacterInfo WHERE adventureId = :adventureId")
+    suspend fun getCharactersForAdventure(adventureId: Int): List<CharacterInfo>
 }
 
 

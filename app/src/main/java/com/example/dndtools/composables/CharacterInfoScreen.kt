@@ -1,4 +1,6 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
+    ExperimentalMaterial3Api::class
+)
 
 package com.example.dndtools.composables
 
@@ -49,7 +51,6 @@ import com.example.dndtools.data.AdventureType
 import com.example.dndtools.data.CharacterInfo
 import com.example.dndtools.ui.theme.DNDToolsTheme
 import com.example.dndtools.viewmodels.CharacterViewModel
-import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -108,8 +109,8 @@ fun CharacterInfoScreen(
             onClick = {
                 val newCharacterInfo =
                     CharacterInfo(
-                        id = adventure.id.absoluteValue,
-                        characterNames = characterViewModel.characterNames
+                        characterNames = characterViewModel.characterNames,
+                        adventureId = adventure.id
                     )
                 onInfoEntered.invoke(newCharacterInfo)
             },
