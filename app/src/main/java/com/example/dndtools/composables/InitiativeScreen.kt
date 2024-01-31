@@ -219,7 +219,11 @@ fun InitiativeScreen(
                     allRolls.forEach { (index, roll) ->
                         val rollType = when {
                             index < initiativeViewModel.characterRolls.size -> {
-                                "Character ${index + 1}"
+                                if (characterInfo != null) {
+                                    "${characterInfo.characterNames.getOrNull(index)}"
+                                } else {
+                                    "Character ${index + 1}"
+                                }
                             }
 
                             index < initiativeViewModel.characterRolls.size + initiativeViewModel.enemyInitiativeRolls.size -> {
@@ -282,7 +286,7 @@ fun PlayerRoll(
             label = {
                 Text(
                     text = if (characterInfo != null) {
-                        "${characterInfo.characterNames[playerNumber]}"
+                        "${characterInfo?.characterNames?.getOrNull(playerNumber - 1)}"
                     } else "Character $playerNumber",
                     color = MaterialTheme.colorScheme.primary
                 )

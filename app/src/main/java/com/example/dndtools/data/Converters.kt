@@ -4,9 +4,9 @@ import androidx.room.TypeConverter
 
 class Converters {
     @TypeConverter
-    fun fromString(value: String): List<String> = value.split(",")
+    fun fromString(value: String): List<String> = value.split(", ")
 
     @TypeConverter
-    fun fromList(value: List<String>): String = value.joinToString(",")
+    fun fromList(value: List<String>): String = value.joinToString(", ")
 
 }

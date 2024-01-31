@@ -134,8 +134,8 @@ fun DndToolsApp() {
             LaunchedEffect(id) {
                 selectedAdventure = database.adventureDao().getAdventureById(id)
                 val characterInfoList = database.characterInfoDao().getCharactersForAdventure(id)
-                println("CharacterInfoList size: ${characterInfoList.size}")
-                characterInfo = characterInfoList.firstOrNull()
+                println("CharacterInfoList size: ${characterInfoList.get(1)}")
+                characterInfo = characterInfoList.first()
             }
 
             InitiativeScreen(adventure = selectedAdventure, characterInfo = characterInfo,back = { navController.popBackStack() })
@@ -163,7 +163,7 @@ fun DndToolsApp() {
         composable(Screen.CharacterInfo.route) { navBackStackEntry ->
             val id = navBackStackEntry.arguments!!.getString("id")!!.toInt()
             var selectedAdventure by remember { mutableStateOf<Adventure?>(null) }
-            val addScreenScope = rememberCoroutineScope()
+            val addCharacterScope = rememberCoroutineScope()
             LaunchedEffect(id) {
                 selectedAdventure = database.adventureDao().getAdventureById(id)
             }
@@ -172,7 +172,7 @@ fun DndToolsApp() {
                     adventure = adventure,
                     back = { navController.popBackStack() },
                     onInfoEntered = { newInfo ->
-                        addScreenScope.launch {
+                        addCharacterScope.launch {
                             database.characterInfoDao().insertCharacterInfo(newInfo)
                             navController.popBackStack()
                         }
