@@ -1,10 +1,12 @@
 package com.example.dndtools.data
 
+import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 
+@Dao
 interface CharacterInfoDao {
     @Insert
     suspend fun insertCharacterInfo(characterInfo: CharacterInfo)
@@ -15,10 +17,12 @@ interface CharacterInfoDao {
     @Update
     suspend fun editInfo(characterInfo: CharacterInfo)
 
-    @Query ("SELECT * FROM CharacterInfo WHERE id = id")
-    suspend fun getInfoById(id: Int): CharacterInfo?
+    @Query ("SELECT * FROM CharacterInfo WHERE id = :infoId")
+    suspend fun getInfoById(infoId: Int): CharacterInfo?
 }
 
+
+@Dao
 interface CharacterProfileDao{
     @Insert
     suspend fun insertCharacterProfile(characterProfile: CharacterProfile)
@@ -29,6 +33,6 @@ interface CharacterProfileDao{
     @Update
     suspend fun editProfile(characterProfile: CharacterProfile)
 
-    @Query ("SELECT * FROM CharacterInfo WHERE id = id")
+    @Query ("SELECT * FROM CharacterProfile WHERE name = :id")
     suspend fun getInfoById(id: Int): CharacterProfile?
 }

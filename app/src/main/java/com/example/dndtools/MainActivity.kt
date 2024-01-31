@@ -121,8 +121,8 @@ fun DndToolsApp() {
                         database.adventureDao().delete(adventure)
                     }; navController.popBackStack()
                 },
-                edit = {adventure -> navController.navigate("edit/${adventure.id}") },
-                playerInfoScreen = {adventure -> navController.navigate("characterInfo/${adventure.id}") }
+                edit = { adventure -> navController.navigate("edit/${adventure.id}") },
+                playerInfoScreen = { adventure -> navController.navigate("characterInfo/${adventure.id}") }
             )
         }
         composable(Screen.Initiative.route) { navBackStackEntry ->
@@ -148,18 +148,31 @@ fun DndToolsApp() {
                     adventure = editedAdventure,
                     back = { navController.popBackStack() },
                     onEdit = { updatedAdventure ->
-                        editScreenScope.launch { database.adventureDao().editAdventure(updatedAdventure) ; navController.popBackStack() }
+                        editScreenScope.launch {
+                            database.adventureDao()
+                                .editAdventure(updatedAdventure); navController.popBackStack()
+                        }
                     })
             }
         }
-        composable(Screen.CharacterInfo.route){ navBackStackEntry ->
+        composable(Screen.CharacterInfo.route) { navBackStackEntry ->
             val id = navBackStackEntry.arguments!!.getString("id")!!.toInt()
             var selectedAdventure by remember { mutableStateOf<Adventure?>(null) }
+            val addScreenScope = rememberCoroutineScope()
             LaunchedEffect(id) {
                 selectedAdventure = database.adventureDao().getAdventureById(id)
             }
             selectedAdventure?.let { adventure ->
-                CharacterInfoScreen(adventure = adventure, back = { navController.popBackStack() },)
+                CharacterInfoScreen(
+                    adventure = adventure,
+                    back = { navController.popBackStack() },
+                    onInfoEntered = { newInfo ->
+                        addScreenScope.launch {
+                            database.characterInfoDao().insertCharacterInfo(newInfo)
+                            navController.popBackStack()
+                        }
+                    }
+                )
             }
         }
     }

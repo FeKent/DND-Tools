@@ -55,6 +55,7 @@ import kotlin.math.absoluteValue
 @Composable
 fun CharacterInfoScreen(
     adventure: Adventure,
+    onInfoEntered: (CharacterInfo) -> Unit,
     back: () -> Unit,
     characterViewModel: CharacterViewModel = viewModel()
 ) {
@@ -110,6 +111,7 @@ fun CharacterInfoScreen(
                         id = adventure.id.absoluteValue,
                         characterNames = characterViewModel.characterNames
                     )
+                onInfoEntered.invoke(newCharacterInfo)
             },
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
@@ -176,6 +178,6 @@ fun PlayerPreview() {
                 "Misfits",
                 3,
                 "Sword's Coast"
-            ), {})
+            ), {}, {})
     }
 }
