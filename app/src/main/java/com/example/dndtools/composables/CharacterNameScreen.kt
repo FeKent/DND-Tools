@@ -53,7 +53,7 @@ import com.example.dndtools.data.CharacterInfo
 import com.example.dndtools.ui.theme.DNDToolsTheme
 import com.example.dndtools.viewmodels.CharacterViewModel
 
-@OptIn(ExperimentalComposeUiApi::class)
+
 @Composable
 fun CharacterNameScreen(
     adventure: Adventure,

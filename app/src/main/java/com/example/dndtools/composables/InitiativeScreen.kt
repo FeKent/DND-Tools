@@ -219,11 +219,8 @@ fun InitiativeScreen(
                     allRolls.forEach { (index, roll) ->
                         val rollType = when {
                             index < initiativeViewModel.characterRolls.size -> {
-                                if (characterInfo != null) {
-                                    "${characterInfo.characterNames.getOrNull(index)}"
-                                } else {
-                                    "Character ${index + 1}"
-                                }
+                                characterInfo?.characterNames?.getOrNull(index)
+                                    ?: "Character ${index + 1}"
                             }
 
                             index < initiativeViewModel.characterRolls.size + initiativeViewModel.enemyInitiativeRolls.size -> {
@@ -285,9 +282,8 @@ fun PlayerRoll(
             singleLine = true,
             label = {
                 Text(
-                    text = if (characterInfo != null) {
-                        "${characterInfo?.characterNames?.getOrNull(playerNumber - 1)}"
-                    } else "Character $playerNumber",
+                    text = characterInfo?.characterNames?.getOrNull(playerNumber - 1)
+                        ?: "Character $playerNumber",
                     color = MaterialTheme.colorScheme.primary
                 )
             },
@@ -321,10 +317,16 @@ fun PlayerRolls(
 ) {
     // Check if adventure and initiativeViewModel are not null
     if (adventure != null) {
-
-        for (i in 1..adventure.players) {
-            PlayerRoll(i, adventure.players, characterInfo, initiativeViewModel)
-            Spacer(modifier = Modifier.size(16.dp))
+        if (characterInfo?.characterNames?.isNotEmpty() == true) {
+            for (i in 1..adventure.players) {
+                PlayerRoll(i, adventure.players, characterInfo, initiativeViewModel)
+                Spacer(modifier = Modifier.size(16.dp))
+            }
+        } else {
+            for (i in 1..adventure.players) {
+                PlayerRoll(i, adventure.players, null, initiativeViewModel)
+                Spacer(modifier = Modifier.size(16.dp))
+            }
         }
     }
 }

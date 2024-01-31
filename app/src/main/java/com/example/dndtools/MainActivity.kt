@@ -134,10 +134,17 @@ fun DndToolsApp() {
             LaunchedEffect(id) {
                 selectedAdventure = database.adventureDao().getAdventureById(id)
                 val characterInfoList = database.characterInfoDao().getCharactersForAdventure(id)
-                characterInfo = characterInfoList.first()
+                characterInfo = if (characterInfoList.isNotEmpty()) {
+                    characterInfoList.first()
+                } else {
+                    null
+                }
             }
 
-            InitiativeScreen(adventure = selectedAdventure, characterInfo = characterInfo,back = { navController.popBackStack() })
+            InitiativeScreen(
+                adventure = selectedAdventure,
+                characterInfo = characterInfo,
+                back = { navController.popBackStack() })
         }
         composable(Screen.Edit.route) { navBackStackEntry ->
             val id = navBackStackEntry.arguments!!.getString("id")!!.toInt()
