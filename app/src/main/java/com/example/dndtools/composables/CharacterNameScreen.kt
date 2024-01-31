@@ -1,5 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
-    ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class
+    ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
+    ExperimentalMaterial3Api::class
 )
 
 package com.example.dndtools.composables
@@ -54,7 +55,7 @@ import com.example.dndtools.viewmodels.CharacterViewModel
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun CharacterInfoScreen(
+fun CharacterNameScreen(
     adventure: Adventure,
     onInfoEntered: (CharacterInfo) -> Unit,
     back: () -> Unit,
@@ -172,7 +173,7 @@ fun CharacterName(playerNumber: Int, totalPlayers: Int, characterViewModel: Char
 @Composable
 fun PlayerPreview() {
     DNDToolsTheme {
-        CharacterInfoScreen(
+        CharacterNameScreen(
             adventure = Adventure(
                 1,
                 AdventureType.OneShot,

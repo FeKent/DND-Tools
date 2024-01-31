@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -57,7 +58,7 @@ fun SelectionScreen(
     initiativeScreen: () -> Unit,
     delete: (Adventure) -> Unit,
     edit: (Adventure) -> Unit,
-    playerInfoScreen: (Adventure) -> Unit
+    characterNameScreen: (Adventure) -> Unit
 ) {
     val showDeleteDialog = remember { mutableStateOf(false) }
 
@@ -111,9 +112,9 @@ fun SelectionScreen(
             Column {
                 Row(horizontalArrangement = Arrangement.SpaceBetween)
                 {
-                    IconWithCaption(Icons.Filled.Info, "Player Info", onClick = { playerInfoScreen(adventure!!)})
+                    IconWithCaption(Icons.Filled.Person, "Character Names", onClick = { characterNameScreen(adventure!!)})
                     Spacer(modifier = Modifier.size(24.dp))
-                    IconWithCaption(Icons.Filled.DateRange, "Schedule Sessions", onClick = {})
+                    IconWithCaption(Icons.Filled.Info, "Player Info", onClick = { })
                     Spacer(modifier = Modifier.size(24.dp))
                     IconWithCaption(
                         Icons.Filled.Warning,
@@ -137,6 +138,8 @@ fun SelectionScreen(
                 Spacer(modifier = Modifier.size(24.dp))
                 Row(horizontalArrangement = Arrangement.SpaceBetween) {
                     IconWithCaption(Icons.Filled.List, caption = "View Notes", onClick = {})
+                    Spacer(modifier = Modifier.size(24.dp))
+                    IconWithCaption(Icons.Filled.DateRange, "Schedule Sessions", onClick = {})
                 }
             }
         }
