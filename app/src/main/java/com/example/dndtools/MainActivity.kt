@@ -21,7 +21,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.example.dndtools.composables.AddScreen
-import com.example.dndtools.composables.CharacterInfoScreen
+import com.example.dndtools.composables.CharacterNameScreen
 import com.example.dndtools.composables.EditScreen
 import com.example.dndtools.composables.InitiativeScreen
 import com.example.dndtools.composables.IntroScreen
@@ -123,7 +123,7 @@ fun DndToolsApp() {
                     }; navController.popBackStack()
                 },
                 edit = { adventure -> navController.navigate("edit/${adventure.id}") },
-                playerInfoScreen = { adventure -> navController.navigate("characterInfo/${adventure.id}") }
+                characterNameScreen = { navController.navigate("characterInfo/${selectedAdventure?.id}") }
             )
         }
         composable(Screen.Initiative.route) { navBackStackEntry ->
@@ -134,7 +134,6 @@ fun DndToolsApp() {
             LaunchedEffect(id) {
                 selectedAdventure = database.adventureDao().getAdventureById(id)
                 val characterInfoList = database.characterInfoDao().getCharactersForAdventure(id)
-                println("CharacterInfoList size: ${characterInfoList.get(1)}")
                 characterInfo = characterInfoList.first()
             }
 
@@ -168,7 +167,7 @@ fun DndToolsApp() {
                 selectedAdventure = database.adventureDao().getAdventureById(id)
             }
             selectedAdventure?.let { adventure ->
-                CharacterInfoScreen(
+                CharacterNameScreen(
                     adventure = adventure,
                     back = { navController.popBackStack() },
                     onInfoEntered = { newInfo ->
