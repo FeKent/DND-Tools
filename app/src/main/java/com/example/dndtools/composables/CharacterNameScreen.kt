@@ -145,7 +145,6 @@ fun CharacterName(playerNumber: Int, totalPlayers: Int, characterViewModel: Char
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
     val isLastPlayer = playerNumber == totalPlayers
-
     Row {
         TextField(
             value = characterName,
