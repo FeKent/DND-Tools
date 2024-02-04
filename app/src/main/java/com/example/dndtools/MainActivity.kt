@@ -11,6 +11,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -140,7 +141,6 @@ fun DndToolsApp() {
                     null
                 }
             }
-
             InitiativeScreen(
                 adventure = selectedAdventure,
                 characterInfo = characterInfo,
@@ -170,16 +170,29 @@ fun DndToolsApp() {
             val id = navBackStackEntry.arguments!!.getString("id")!!.toInt()
             var selectedAdventure by remember { mutableStateOf<Adventure?>(null) }
             val addCharacterScope = rememberCoroutineScope()
+
             LaunchedEffect(id) {
                 selectedAdventure = database.adventureDao().getAdventureById(id)
             }
+
+            val existingCharacters by produceState<List<CharacterInfo>?>(initialValue = null) {
+                value = database.characterInfoDao().getCharactersForAdventure(id)
+            }
+
             selectedAdventure?.let { adventure ->
                 CharacterNameScreen(
+                    existingCharacters = existingCharacters,
                     adventure = adventure,
                     back = { navController.popBackStack() },
                     onInfoEntered = { newInfo ->
                         addCharacterScope.launch {
-                            database.characterInfoDao().insertCharacterInfo(newInfo)
+                            if (existingCharacters.isNullOrEmpty()) {
+                                // No existing characters, insert new character info
+                                database.characterInfoDao().insertCharacterInfo(newInfo)
+                            } else {
+                                // Existing characters, update the first one
+                                database.characterInfoDao().editInfo(newInfo.copy(id = existingCharacters!![0].id))
+                            }
                             navController.popBackStack()
                         }
                     }

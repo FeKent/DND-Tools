@@ -1,6 +1,7 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
+@file:OptIn(
     ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
-    ExperimentalMaterial3Api::class
+    ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
+    ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class
 )
 
 package com.example.dndtools.composables
@@ -56,6 +57,7 @@ import com.example.dndtools.viewmodels.CharacterViewModel
 
 @Composable
 fun CharacterNameScreen(
+    existingCharacters: List<CharacterInfo>?,
     adventure: Adventure,
     onInfoEntered: (CharacterInfo) -> Unit,
     back: () -> Unit,
@@ -108,12 +110,22 @@ fun CharacterNameScreen(
         Spacer(modifier = Modifier.size(24.dp))
         IconButton(
             onClick = {
-                val newCharacterInfo =
-                    CharacterInfo(
+                if (existingCharacters.isNullOrEmpty()) {
+                    // No existing characters, create new character info
+                    val newCharacterInfo = CharacterInfo(
                         characterNames = characterViewModel.characterNames,
                         adventureId = adventure.id
                     )
-                onInfoEntered.invoke(newCharacterInfo)
+                    onInfoEntered.invoke(newCharacterInfo)
+                } else {
+                    // Existing characters, update the first one
+                    val updateCharacterInfo = CharacterInfo(
+                        id = existingCharacters[0].id,
+                        characterNames = characterViewModel.characterNames,
+                        adventureId = adventure.id
+                    )
+                    onInfoEntered.invoke(updateCharacterInfo)
+                }
             },
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
@@ -174,12 +186,15 @@ fun CharacterName(playerNumber: Int, totalPlayers: Int, characterViewModel: Char
 fun PlayerPreview() {
     DNDToolsTheme {
         CharacterNameScreen(
+            existingCharacters = null,
             adventure = Adventure(
                 1,
                 AdventureType.OneShot,
                 "Misfits",
                 3,
                 "Sword's Coast"
-            ), {}, {})
+            ),
+            {}, {},
+        )
     }
 }
