@@ -1,7 +1,8 @@
 @file:OptIn(
     ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
     ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
-    ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class
+    ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
+    ExperimentalMaterial3Api::class
 )
 
 package com.example.dndtools.composables
@@ -103,7 +104,8 @@ fun CharacterNameScreen(
                 CharacterName(
                     playerNumber = i,
                     totalPlayers = adventure.players,
-                    characterViewModel = characterViewModel
+                    characterViewModel = characterViewModel,
+                    existingCharacters = existingCharacters
                 )
             }
         }
@@ -140,11 +142,27 @@ fun CharacterNameScreen(
 }
 
 @Composable
-fun CharacterName(playerNumber: Int, totalPlayers: Int, characterViewModel: CharacterViewModel) {
+fun CharacterName(
+    playerNumber: Int,
+    totalPlayers: Int,
+    characterViewModel: CharacterViewModel,
+    existingCharacters: List<CharacterInfo>?
+) {
     var characterName by remember { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
     val isLastPlayer = playerNumber == totalPlayers
+
+    val matchingCharacter = existingCharacters?.find { it.characterNames.isNotEmpty() && it.characterNames.size >= playerNumber }
+
+    val label = if (matchingCharacter != null) {
+        // Use the character's name as the label if a matching character is found
+        matchingCharacter.characterNames[playerNumber - 1]
+    } else {
+        // Use the default label if no matching character is found
+        "Character $playerNumber"
+    }
+
     Row {
         TextField(
             value = characterName,
@@ -152,7 +170,7 @@ fun CharacterName(playerNumber: Int, totalPlayers: Int, characterViewModel: Char
             singleLine = true,
             label = {
                 Text(
-                    text = "Character $playerNumber",
+                    text = label,
                     color = MaterialTheme.colorScheme.primary
                 )
             },
