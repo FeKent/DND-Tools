@@ -58,7 +58,8 @@ fun SelectionScreen(
     initiativeScreen: () -> Unit,
     delete: (Adventure) -> Unit,
     edit: (Adventure) -> Unit,
-    characterNameScreen: (Adventure) -> Unit
+    characterNameScreen: (Adventure) -> Unit,
+    playerInfoScreen: (Adventure) -> Unit,
 ) {
     val showDeleteDialog = remember { mutableStateOf(false) }
 
@@ -114,7 +115,7 @@ fun SelectionScreen(
                 {
                     IconWithCaption(Icons.Filled.Person, "Character Names", onClick = { characterNameScreen(adventure!!)})
                     Spacer(modifier = Modifier.size(24.dp))
-                    IconWithCaption(Icons.Filled.Info, "Player Info", onClick = { })
+                    IconWithCaption(Icons.Filled.Info, "Player Info", onClick = { playerInfoScreen(adventure!!)})
                     Spacer(modifier = Modifier.size(24.dp))
                     IconWithCaption(
                         Icons.Filled.Warning,
@@ -209,6 +210,6 @@ fun SelectionPreview() {
             adventure = Adventure(1, AdventureType.OneShot, "Misfits", 3, "Sword's Coast"),
             {},
             {},
-            {}, {})
+            {}, {}, {})
     }
 }

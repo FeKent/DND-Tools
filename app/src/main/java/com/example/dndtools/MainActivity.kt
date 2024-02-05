@@ -26,6 +26,7 @@ import com.example.dndtools.composables.CharacterNameScreen
 import com.example.dndtools.composables.EditScreen
 import com.example.dndtools.composables.InitiativeScreen
 import com.example.dndtools.composables.IntroScreen
+import com.example.dndtools.composables.PlayerInfoScreen
 import com.example.dndtools.composables.SelectionScreen
 import com.example.dndtools.data.Adventure
 import com.example.dndtools.data.CharacterInfo
@@ -57,6 +58,7 @@ sealed class Screen(val route: String) {
     object Initiative : Screen("initiative/{id}")
     object Edit : Screen("edit/{id}")
     object CharacterInfo : Screen("characterInfo/{id}")
+    object PlayerInfo : Screen("playerInfo/{id}")
 }
 
 @Composable
@@ -124,7 +126,8 @@ fun DndToolsApp() {
                     }; navController.popBackStack()
                 },
                 edit = { adventure -> navController.navigate("edit/${adventure.id}") },
-                characterNameScreen = { navController.navigate("characterInfo/${selectedAdventure?.id}") }
+                characterNameScreen = { navController.navigate("characterInfo/${selectedAdventure?.id}") },
+                playerInfoScreen = { navController.navigate("playerInfo/${selectedAdventure?.id}") }
             )
         }
         composable(Screen.Initiative.route) { navBackStackEntry ->
@@ -193,13 +196,25 @@ fun DndToolsApp() {
                                 database.characterInfoDao().insertCharacterInfo(newInfo)
                             } else {
                                 // Existing characters, update the first one
-                                database.characterInfoDao().editInfo(newInfo.copy(id = existingCharacters!![0].id))
+                                database.characterInfoDao()
+                                    .editInfo(newInfo.copy(id = existingCharacters!![0].id))
                             }
                             navController.popBackStack()
                         }
                     },
                     characterToEdit = editingCharacters
                 )
+            }
+        }
+        composable(Screen.PlayerInfo.route) { navBackStackEntry ->
+            val id = navBackStackEntry.arguments!!.getString("id")!!.toInt()
+            var selectedAdventure by remember { mutableStateOf<Adventure?>(null) }
+
+            LaunchedEffect(id) {
+                selectedAdventure = database.adventureDao().getAdventureById(id)
+            }
+            selectedAdventure?.let { adventure ->
+                PlayerInfoScreen(adventure = adventure, back = { navController.popBackStack() })
             }
         }
     }
