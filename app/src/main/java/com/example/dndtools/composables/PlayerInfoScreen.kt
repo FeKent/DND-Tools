@@ -5,6 +5,7 @@ package com.example.dndtools.composables
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -24,7 +25,6 @@ import com.example.dndtools.data.Adventure
 
 @Composable
 fun PlayerInfoScreen(adventure: Adventure?, back: () -> Unit) {
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -55,5 +55,7 @@ fun PlayerInfoScreen(adventure: Adventure?, back: () -> Unit) {
                 )
             }
         )
+        Spacer(modifier = Modifier.size(52.dp))
     }
 }
+
