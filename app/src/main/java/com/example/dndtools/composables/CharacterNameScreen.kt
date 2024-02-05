@@ -2,7 +2,7 @@
     ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
     ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
     ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
-    ExperimentalMaterial3Api::class
+    ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class
 )
 
 package com.example.dndtools.composables
@@ -62,6 +62,7 @@ fun CharacterNameScreen(
     adventure: Adventure,
     onInfoEntered: (CharacterInfo) -> Unit,
     back: () -> Unit,
+    characterToEdit: CharacterInfo? = null,
     characterViewModel: CharacterViewModel = viewModel()
 ) {
     Column(
@@ -105,7 +106,8 @@ fun CharacterNameScreen(
                     playerNumber = i,
                     totalPlayers = adventure.players,
                     characterViewModel = characterViewModel,
-                    existingCharacters = existingCharacters
+                    existingCharacters = existingCharacters,
+                    characterToEdit = characterToEdit
                 )
             }
         }
@@ -146,9 +148,11 @@ fun CharacterName(
     playerNumber: Int,
     totalPlayers: Int,
     characterViewModel: CharacterViewModel,
-    existingCharacters: List<CharacterInfo>?
+    existingCharacters: List<CharacterInfo>?,
+    characterToEdit: CharacterInfo?
 ) {
-    var characterName by remember { mutableStateOf("") }
+    var characterName by remember { mutableStateOf(
+        characterToEdit?.characterNames?.get(playerNumber -1) ?: "") }
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
     val isLastPlayer = playerNumber == totalPlayers

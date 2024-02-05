@@ -20,7 +20,8 @@ interface CharacterInfoDao {
     @Query("SELECT * FROM CharacterInfo WHERE adventureId = :adventureId")
     suspend fun getCharactersForAdventure(adventureId: Int): List<CharacterInfo>
 
-
+    @Query("SELECT * FROM characterinfo WHERE id = :characterInfoId LIMIT 1")
+    suspend fun getCharacter(characterInfoId: Int): CharacterInfo
 }
 
 

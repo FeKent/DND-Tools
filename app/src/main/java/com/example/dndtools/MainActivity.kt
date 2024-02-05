@@ -169,10 +169,12 @@ fun DndToolsApp() {
         composable(Screen.CharacterInfo.route) { navBackStackEntry ->
             val id = navBackStackEntry.arguments!!.getString("id")!!.toInt()
             var selectedAdventure by remember { mutableStateOf<Adventure?>(null) }
+            var editingCharacters by remember { mutableStateOf<CharacterInfo?>(null) }
             val addCharacterScope = rememberCoroutineScope()
 
             LaunchedEffect(id) {
                 selectedAdventure = database.adventureDao().getAdventureById(id)
+                editingCharacters = database.characterInfoDao().getCharacter(id)
             }
 
             val existingCharacters by produceState<List<CharacterInfo>?>(initialValue = null) {
@@ -195,7 +197,8 @@ fun DndToolsApp() {
                             }
                             navController.popBackStack()
                         }
-                    }
+                    },
+                    characterToEdit = editingCharacters
                 )
             }
         }
