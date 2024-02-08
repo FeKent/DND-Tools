@@ -77,7 +77,6 @@ fun CharacterInfoScreen(adventure: Adventure?, back: () -> Unit) {
 }
 
 
-
 @Composable
 fun FilledCharacterCard(characterProfile: CharacterProfile) {
     ElevatedCard(
