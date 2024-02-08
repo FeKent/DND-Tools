@@ -36,6 +36,9 @@ interface CharacterProfileDao{
     @Update
     suspend fun editProfile(characterProfile: CharacterProfile)
 
+    @Query("SELECT * FROM CharacterProfile WHERE adventureId = :adventureId")
+    suspend fun getProfilesForAdventure(adventureId: Int): List<CharacterProfile>
+
     @Query ("SELECT * FROM CharacterProfile WHERE name = :id")
     suspend fun getInfoById(id: Int): CharacterProfile?
 }

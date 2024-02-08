@@ -30,6 +30,7 @@ import com.example.dndtools.composables.IntroScreen
 import com.example.dndtools.composables.SelectionScreen
 import com.example.dndtools.data.Adventure
 import com.example.dndtools.data.CharacterInfo
+import com.example.dndtools.data.CharacterProfile
 import com.example.dndtools.data.DndToolsDatabase
 import com.example.dndtools.ui.theme.DNDToolsTheme
 import kotlinx.coroutines.launch
@@ -209,13 +210,26 @@ fun DndToolsApp() {
         composable(Screen.CharacterInfo.route) { navBackStackEntry ->
             val id = navBackStackEntry.arguments!!.getString("id")!!.toInt()
             var selectedAdventure by remember { mutableStateOf<Adventure?>(null) }
+            val characterProfileScope = rememberCoroutineScope()
+
+            val characterProfiles by produceState<List<CharacterProfile>?>(initialValue = null){
+                value = database.characterProfileDao().getProfilesForAdventure(id)
+            }
 
             LaunchedEffect(id) {
                 selectedAdventure = database.adventureDao().getAdventureById(id)
             }
             selectedAdventure?.let { adventure ->
-                CharacterInfoScreen(adventure = adventure, back = { navController.popBackStack() })
-            }
+                CharacterInfoScreen(
+                    characters = characterProfiles!!,
+                    adventure = adventure,
+                    back = { navController.popBackStack() },
+                    onProfileEntered = { characterProfile ->
+                        characterProfileScope.launch {
+                            database.characterProfileDao().insertCharacterProfile(characterProfile)
+                        }
+                    })
+                }
         }
     }
 }

@@ -20,12 +20,19 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 @TypeConverters(Converters::class)
 data class CharacterInfo(
-    @PrimaryKey (autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val characterNames: List<String>,
     val adventureId: Int,
 ) : Parcelable
 
-@Entity
+@Entity(
+    foreignKeys = [ForeignKey(
+        entity = Adventure::class,
+        parentColumns = ["id"],
+        childColumns = ["adventureId"],
+        onDelete = ForeignKey.CASCADE
+    )], indices = [Index("adventureId")]
+)
 @Parcelize
 data class CharacterProfile(
     @PrimaryKey val name: String,
@@ -34,5 +41,6 @@ data class CharacterProfile(
     val level: Int,
     val armour: Int,
     val hitPoints: Int,
-    val spellSave: Int
+    val spellSave: Int,
+    val adventureId: Int,
 ) : Parcelable
