@@ -17,7 +17,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -30,7 +29,6 @@ import com.example.dndtools.composables.IntroScreen
 import com.example.dndtools.composables.PlayerInfoScreen
 import com.example.dndtools.composables.SelectionScreen
 import com.example.dndtools.data.Adventure
-import com.example.dndtools.data.AdventureType
 import com.example.dndtools.data.CharacterInfo
 import com.example.dndtools.data.DndToolsDatabase
 import com.example.dndtools.ui.theme.DNDToolsTheme
@@ -222,17 +220,3 @@ fun DndToolsApp() {
     }
 }
 
-@Preview(showSystemUi = true)
-@Composable
-fun PlayerInfoPreview() {
-    DNDToolsTheme {
-        PlayerInfoScreen(
-            adventure = Adventure(
-                1,
-                AdventureType.OneShot,
-                "Misfits",
-                3,
-                "Sword's Coast"
-            ),{})
-    }
-}

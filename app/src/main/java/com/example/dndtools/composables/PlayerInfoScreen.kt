@@ -20,8 +20,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.dndtools.data.Adventure
+import com.example.dndtools.data.CharacterProfile
+import com.example.dndtools.ui.theme.DNDToolsTheme
 
 @Composable
 fun PlayerInfoScreen(adventure: Adventure?, back: () -> Unit) {
@@ -59,3 +62,31 @@ fun PlayerInfoScreen(adventure: Adventure?, back: () -> Unit) {
     }
 }
 
+
+@Composable
+fun PlayerInfoCard(characterProfile: CharacterProfile) {
+
+}
+
+@Preview
+@Composable
+fun InfoCardPreview() {
+    DNDToolsTheme {
+        PlayerInfoCard(characterProfile = CharacterProfile("Myra", "Gnome", 8, 16, 77))
+    }
+}
+
+//@Preview(showSystemUi = true)
+//@Composable
+//fun PlayerInfoPreview() {
+//    DNDToolsTheme {
+//        PlayerInfoScreen(
+//            adventure = Adventure(
+//                1,
+//                AdventureType.OneShot,
+//                "Misfits",
+//                3,
+//                "Sword's Coast"
+//            )){}
+//    }
+//}
