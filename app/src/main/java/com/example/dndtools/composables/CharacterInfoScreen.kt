@@ -1,4 +1,5 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
+@file:OptIn(
+    ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
     ExperimentalMaterial3Api::class
 )
 
@@ -6,6 +7,7 @@ package com.example.dndtools.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -30,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -74,8 +77,9 @@ fun CharacterInfoScreen(adventure: Adventure?, back: () -> Unit) {
 }
 
 
+
 @Composable
-fun CharacterCard(characterProfile: CharacterProfile) {
+fun FilledCharacterCard(characterProfile: CharacterProfile) {
     ElevatedCard(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
         modifier = Modifier
@@ -87,18 +91,27 @@ fun CharacterCard(characterProfile: CharacterProfile) {
     ) {
         Row(
             modifier = Modifier
-                .padding(12.dp)
-                .fillMaxWidth(), verticalAlignment = Alignment.Bottom
+                .padding(top = 12.dp, start = 12.dp, end = 12.dp)
+                .fillMaxWidth(), verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.Center
         ) {
             Text(
                 text = characterProfile.name,
                 fontWeight = FontWeight.Bold,
                 fontSize = 26.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
-                    .alignByBaseline()
-                    .weight(1f),
+                    .alignByBaseline(),
                 color = MaterialTheme.colorScheme.onBackground
             )
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 12.dp, end = 12.dp, bottom = 6.dp),
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.Center
+        ) {
             Text(
                 text = characterProfile.race,
                 fontSize = 14.sp,
@@ -146,7 +159,17 @@ fun CharacterCard(characterProfile: CharacterProfile) {
 @Composable
 fun InfoCardPreview() {
     DNDToolsTheme {
-        CharacterCard(characterProfile = CharacterProfile("Myra", "Gnome", "Druid", 8, 16, 77, 15))
+        FilledCharacterCard(
+            characterProfile = CharacterProfile(
+                "Myra",
+                "Gnome",
+                "Druid",
+                8,
+                16,
+                77,
+                15
+            )
+        )
     }
 }
 
