@@ -22,11 +22,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.example.dndtools.composables.AddScreen
+import com.example.dndtools.composables.CharacterInfoScreen
 import com.example.dndtools.composables.CharacterNameScreen
 import com.example.dndtools.composables.EditScreen
 import com.example.dndtools.composables.InitiativeScreen
 import com.example.dndtools.composables.IntroScreen
-import com.example.dndtools.composables.PlayerInfoScreen
 import com.example.dndtools.composables.SelectionScreen
 import com.example.dndtools.data.Adventure
 import com.example.dndtools.data.CharacterInfo
@@ -57,8 +57,8 @@ sealed class Screen(val route: String) {
     object Selection : Screen("selection/{id}")
     object Initiative : Screen("initiative/{id}")
     object Edit : Screen("edit/{id}")
-    object CharacterInfo : Screen("characterInfo/{id}")
-    object PlayerInfo : Screen("playerInfo/{id}")
+    object CharacterName : Screen("characterName/{id}")
+    object CharacterInfo : Screen("playerInfo/{id}")
 }
 
 @Composable
@@ -126,7 +126,7 @@ fun DndToolsApp() {
                     }; navController.popBackStack()
                 },
                 edit = { adventure -> navController.navigate("edit/${adventure.id}") },
-                characterNameScreen = { navController.navigate("characterInfo/${selectedAdventure?.id}") },
+                characterNameScreen = { navController.navigate("characterName/${selectedAdventure?.id}") },
                 playerInfoScreen = { navController.navigate("playerInfo/${selectedAdventure?.id}") }
             )
         }
@@ -169,7 +169,7 @@ fun DndToolsApp() {
                     })
             }
         }
-        composable(Screen.CharacterInfo.route) { navBackStackEntry ->
+        composable(Screen.CharacterName.route) { navBackStackEntry ->
             val id = navBackStackEntry.arguments!!.getString("id")!!.toInt()
             var selectedAdventure by remember { mutableStateOf<Adventure?>(null) }
             var editingCharacters by remember { mutableStateOf<CharacterInfo?>(null) }
@@ -206,7 +206,7 @@ fun DndToolsApp() {
                 )
             }
         }
-        composable(Screen.PlayerInfo.route) { navBackStackEntry ->
+        composable(Screen.CharacterInfo.route) { navBackStackEntry ->
             val id = navBackStackEntry.arguments!!.getString("id")!!.toInt()
             var selectedAdventure by remember { mutableStateOf<Adventure?>(null) }
 
@@ -214,7 +214,7 @@ fun DndToolsApp() {
                 selectedAdventure = database.adventureDao().getAdventureById(id)
             }
             selectedAdventure?.let { adventure ->
-                PlayerInfoScreen(adventure = adventure, back = { navController.popBackStack() })
+                CharacterInfoScreen(adventure = adventure, back = { navController.popBackStack() })
             }
         }
     }

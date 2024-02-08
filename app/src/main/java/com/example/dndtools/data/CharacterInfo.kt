@@ -30,7 +30,9 @@ data class CharacterInfo(
 data class CharacterProfile(
     @PrimaryKey val name: String,
     val race: String,
+    val mainClass: String,
     val level: Int,
     val armour: Int,
-    val hitPoints: Int
+    val hitPoints: Int,
+    val spellSave: Int
 ) : Parcelable
