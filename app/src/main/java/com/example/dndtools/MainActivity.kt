@@ -228,6 +228,7 @@ fun DndToolsApp() {
                         characterProfileScope.launch {
                             database.characterProfileDao().insertCharacterProfile(characterProfile)
                         }
+                        navController.popBackStack()
                     })
                 }
         }

@@ -51,8 +51,8 @@ import com.example.dndtools.data.CharacterProfile
 import com.example.dndtools.ui.theme.DNDToolsTheme
 
 enum class CharacterScreenState {
-    Input,
-    Output,
+    Add,
+    Display,
 }
 
 @Composable
@@ -62,7 +62,8 @@ fun CharacterInfoScreen(
     onProfileEntered: (CharacterProfile) -> Unit,
     characters: List<CharacterProfile>
 ) {
-    var currentScreenState by remember { mutableStateOf(CharacterScreenState.Output) }
+    var currentScreenState by remember { mutableStateOf(CharacterScreenState.Display) }
+
 
     Column(
         modifier = Modifier
@@ -97,7 +98,7 @@ fun CharacterInfoScreen(
         Spacer(modifier = Modifier.size(36.dp))
 
         when (currentScreenState) {
-            CharacterScreenState.Output -> {
+            CharacterScreenState.Display -> {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Box {
                         Column(
@@ -112,7 +113,7 @@ fun CharacterInfoScreen(
                             }
                         }
                     }
-                    IconButton(onClick = { currentScreenState = CharacterScreenState.Input }) {
+                    IconButton(onClick = { currentScreenState = CharacterScreenState.Add }) {
                         Icon(
                             Icons.Filled.Add,
                             "Add Another Profile",
@@ -123,13 +124,8 @@ fun CharacterInfoScreen(
                 }
             }
 
-            CharacterScreenState.Input -> {
-                AddCharacterProfile(onProfileEntered = {
-                    // Call the onProfileEntered callback
-                    onProfileEntered(it)
-                    // Change state back to Output after profile entered
-                    currentScreenState = CharacterScreenState.Output
-                }, adventure = adventure)
+            CharacterScreenState.Add -> {
+                AddCharacterProfile(onProfileEntered = onProfileEntered, adventure = adventure)
             }
         }
     }
