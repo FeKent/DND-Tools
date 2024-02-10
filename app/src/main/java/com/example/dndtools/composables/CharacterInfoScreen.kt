@@ -22,6 +22,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -63,7 +65,6 @@ fun CharacterInfoScreen(
     characters: List<CharacterProfile>
 ) {
     var currentScreenState by remember { mutableStateOf(CharacterScreenState.Display) }
-
 
     Column(
         modifier = Modifier
@@ -113,13 +114,34 @@ fun CharacterInfoScreen(
                             }
                         }
                     }
-                    IconButton(onClick = { currentScreenState = CharacterScreenState.Add }) {
-                        Icon(
-                            Icons.Filled.Add,
-                            "Add Another Profile",
-                            tint = MaterialTheme.colorScheme.onBackground,
-                            modifier = Modifier.size(80.dp)
-                        )
+                    if (characters.size == adventure.players) {
+                        Row {
+                            IconButton(onClick = { /*TODO*/ }) {
+                                Icon(
+                                    Icons.Filled.Create, "Edit Profile",
+                                    tint = MaterialTheme.colorScheme.onBackground,
+                                    modifier = Modifier.size(80.dp)
+                                )
+                            }
+                            IconButton(onClick = { /*TODO*/ }) {
+                                Icon(
+                                    Icons.Filled.Delete,
+                                    "Delete Profile",
+                                    tint = MaterialTheme.colorScheme.onBackground,
+                                    modifier = Modifier.size(80.dp)
+                                )
+                            }
+                        }
+
+                    } else {
+                        IconButton(onClick = { currentScreenState = CharacterScreenState.Add }) {
+                            Icon(
+                                Icons.Filled.Add,
+                                "Add Another Profile",
+                                tint = MaterialTheme.colorScheme.onBackground,
+                                modifier = Modifier.size(80.dp)
+                            )
+                        }
                     }
                 }
             }
@@ -284,7 +306,7 @@ fun FilledCharacterCard(characterProfile: CharacterProfile) {
 fun CharacterInfoPreview() {
     DNDToolsTheme {
         CharacterInfoScreen(
-            adventure = Adventure(1, AdventureType.Campaign, "Misfits", 4, "Sword Coast"),
+            adventure = Adventure(1, AdventureType.Campaign, "Misfits", 2, "Sword Coast"),
             back = {},
             onProfileEntered = {},
             characters = listOf(
