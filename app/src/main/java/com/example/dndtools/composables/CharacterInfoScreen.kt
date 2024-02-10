@@ -132,7 +132,7 @@ fun CharacterInfoScreen(
                             Icon(
                                 Icons.Filled.Create, "Edit Profile",
                                 tint = MaterialTheme.colorScheme.onBackground,
-                                modifier = Modifier.size(80.dp)
+                                modifier = Modifier.size(35.dp)
                             )
                         }
                         IconButton(onClick = { /*TODO*/ }) {
@@ -140,7 +140,7 @@ fun CharacterInfoScreen(
                                 Icons.Filled.Delete,
                                 "Delete Profile",
                                 tint = MaterialTheme.colorScheme.onBackground,
-                                modifier = Modifier.size(80.dp)
+                                modifier = Modifier.size(35.dp)
                             )
                         }
                     }
