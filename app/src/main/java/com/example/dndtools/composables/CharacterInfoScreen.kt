@@ -114,35 +114,37 @@ fun CharacterInfoScreen(
                             }
                         }
                     }
-                    if (characters.size == adventure.players) {
-                        Row {
-                            IconButton(onClick = { /*TODO*/ }) {
+
+                    Row {
+                        if (characters.size < adventure.players) {
+                            IconButton(onClick = {
+                                currentScreenState = CharacterScreenState.Add
+                            }) {
                                 Icon(
-                                    Icons.Filled.Create, "Edit Profile",
-                                    tint = MaterialTheme.colorScheme.onBackground,
-                                    modifier = Modifier.size(80.dp)
-                                )
-                            }
-                            IconButton(onClick = { /*TODO*/ }) {
-                                Icon(
-                                    Icons.Filled.Delete,
-                                    "Delete Profile",
+                                    Icons.Filled.Add,
+                                    "Add Another Profile",
                                     tint = MaterialTheme.colorScheme.onBackground,
                                     modifier = Modifier.size(80.dp)
                                 )
                             }
                         }
-
-                    } else {
-                        IconButton(onClick = { currentScreenState = CharacterScreenState.Add }) {
+                        IconButton(onClick = { /*TODO*/ }) {
                             Icon(
-                                Icons.Filled.Add,
-                                "Add Another Profile",
+                                Icons.Filled.Create, "Edit Profile",
+                                tint = MaterialTheme.colorScheme.onBackground,
+                                modifier = Modifier.size(80.dp)
+                            )
+                        }
+                        IconButton(onClick = { /*TODO*/ }) {
+                            Icon(
+                                Icons.Filled.Delete,
+                                "Delete Profile",
                                 tint = MaterialTheme.colorScheme.onBackground,
                                 modifier = Modifier.size(80.dp)
                             )
                         }
                     }
+
                 }
             }
 
@@ -306,7 +308,7 @@ fun FilledCharacterCard(characterProfile: CharacterProfile) {
 fun CharacterInfoPreview() {
     DNDToolsTheme {
         CharacterInfoScreen(
-            adventure = Adventure(1, AdventureType.Campaign, "Misfits", 2, "Sword Coast"),
+            adventure = Adventure(1, AdventureType.Campaign, "Misfits", 3, "Sword Coast"),
             back = {},
             onProfileEntered = {},
             characters = listOf(
